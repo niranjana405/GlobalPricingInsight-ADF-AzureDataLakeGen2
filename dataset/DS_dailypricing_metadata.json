@@ -14,32 +14,7 @@
 				"fileSystem": "landing"
 			}
 		},
-		"schema": {
-			"type": "object",
-			"properties": {
-				"Relative_URL_folder_name": {
-					"type": "string"
-				},
-				"Relative_URL_file_name": {
-					"type": "string"
-				},
-				"Relative_URL_file_type": {
-					"type": "string"
-				},
-				"sink_container_name": {
-					"type": "string"
-				},
-				"sink_folder_name": {
-					"type": "string"
-				},
-				"sink_file_name": {
-					"type": "string"
-				},
-				"sink_file_type": {
-					"type": "string"
-				}
-			}
-		}
+		"schema": {}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
