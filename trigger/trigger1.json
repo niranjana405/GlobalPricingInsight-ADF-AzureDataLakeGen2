@@ -3,15 +3,6 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipeline": {
-			"pipelineReference": {
-				"referenceName": "pipeline_daily_pricing",
-				"type": "PipelineReference"
-			},
-			"parameters": {
-				"dst_source_file_date": "@trigger().outputs.windowStartTime"
-			}
-		},
 		"type": "TumblingWindowTrigger",
 		"typeProperties": {
 			"frequency": "Hour",
