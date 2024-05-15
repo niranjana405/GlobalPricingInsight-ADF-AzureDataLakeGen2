@@ -11,6 +11,9 @@
 		"AzureDataLakeStorage2_accountKey": {
 			"value": ""
 		},
+		"LS_sink_dailypricing_lab1_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
