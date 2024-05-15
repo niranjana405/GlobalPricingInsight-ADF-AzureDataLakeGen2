@@ -1,0 +1,9 @@
+{
+	"name": "ADF-NIRA",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "43dd5d45-dafa-40b5-88fd-1879fa57155b",
+		"tenantId": "584b6cc1-9740-408a-9796-bd5e8a326233"
+	}
+}
