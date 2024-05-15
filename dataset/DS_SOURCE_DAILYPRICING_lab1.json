@@ -1,5 +1,5 @@
 {
-	"name": "DS_SOURCE_DAILYPRICING",
+	"name": "DS_SOURCE_DAILYPRICING_lab1",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorage2",
@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "PW_MW_DR_01012023",
 				"folderPath": "daily-pricing",
 				"fileSystem": "landing"
 			},
