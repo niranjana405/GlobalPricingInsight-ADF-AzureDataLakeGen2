@@ -1,0 +1,29 @@
+{
+	"name": "TWTRG_daily_pricing",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "pipeline_daily_pricing",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"dst_source_file_date": "@trigger().outputs.windowStartTime"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Hour",
+			"interval": 24,
+			"startTime": "2023-01-01T04:56:00Z",
+			"endTime": "2023-01-16T04:56:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 2,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}
