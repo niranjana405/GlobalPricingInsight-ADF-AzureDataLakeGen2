@@ -12,46 +12,83 @@
 					"name": "dfsourcedailypricinglab1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_sink_dailypricing_lab1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
-					"name": "select1"
+					"name": "selectstatename"
+				},
+				{
+					"name": "aggregateuniquestatenames"
+				},
+				{
+					"name": "selectexcludecountstatename"
+				},
+				{
+					"name": "surrogateKeygeneratestateid"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          Column_1 as string,",
-				"          Column_2 as string,",
-				"          Column_3 as string,",
-				"          Column_4 as string,",
-				"          Column_5 as string,",
-				"          Column_6 as string,",
-				"          Column_7 as string,",
-				"          Column_8 as string,",
-				"          Column_9 as string,",
-				"          Column_10 as string,",
-				"          Column_11 as string,",
-				"          Column_12 as string",
+				"          DATE_OF_PRICING as string,",
+				"          ROW_ID as string,",
+				"          STATE_NAME as string,",
+				"          MARKET_NAME as string,",
+				"          PRODUCTGROUP_NAME as string,",
+				"          PRODUCT_NAME as string,",
+				"          VARIETY as string,",
+				"          ORIGIN as string,",
+				"          ARRIVAL_IN_TONNES as string,",
+				"          MINIMUM_PRICE as string,",
+				"          MAXIMUM_PRICE as string,",
+				"          MODAL_PRICE as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> dfsourcedailypricinglab1",
 				"dfsourcedailypricinglab1 select(mapColumn(",
-				"          Column_1,",
-				"          Column_2,",
-				"          Column_3,",
-				"          Column_4,",
-				"          Column_5,",
-				"          Column_6,",
-				"          Column_7,",
-				"          Column_8,",
-				"          Column_9,",
-				"          Column_10,",
-				"          Column_11,",
-				"          Column_12",
+				"          STATE_NAME",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> selectstatename",
+				"selectstatename aggregate(groupBy(STATE_NAME),",
+				"     COUNT_STATE_NAME = count(STATE_NAME)) ~> aggregateuniquestatenames",
+				"aggregateuniquestatenames select(mapColumn(",
+				"          STATE_NAME",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectexcludecountstatename",
+				"selectexcludecountstatename keyGenerate(output(STATE_ID as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKeygeneratestateid",
+				"surrogateKeygeneratestateid derive(DWH_CREATED_DATE = currentDate(),",
+				"          DWH_UPDATED_DATE = currentDate()) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          STATE_NAME as string,",
+				"          STATE_ID as integer,",
+				"          DWH_CREATED_DATE as timestamp,",
+				"          DWH_UPDATED_DATE as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}

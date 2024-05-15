@@ -9,9 +9,7 @@
 		"type": "Json",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"fileName": "metadata-daily-pricing-source-files.json",
-				"fileSystem": "landing"
+				"type": "AzureBlobFSLocation"
 			}
 		},
 		"schema": {}
