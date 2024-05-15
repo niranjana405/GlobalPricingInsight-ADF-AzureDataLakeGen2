@@ -1,0 +1,31 @@
+{
+	"name": "source1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Ls_source",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"dst_relative_url": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().dst_relative_url",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

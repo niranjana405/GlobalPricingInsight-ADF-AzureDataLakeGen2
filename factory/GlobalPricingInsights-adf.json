@@ -1,0 +1,9 @@
+{
+	"name": "GlobalPricingInsights-adf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "44e11b51-fa8f-4c32-8653-171dbd3fa1ea",
+		"tenantId": "584b6cc1-9740-408a-9796-bd5e8a326233"
+	}
+}
