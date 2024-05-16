@@ -10,6 +10,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "dfsourcedailypricinglab1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_dim_state_source_lookup",
+						"type": "DatasetReference"
+					},
+					"name": "sourcedimstatelookup"
 				}
 			],
 			"sinks": [
@@ -36,6 +43,9 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "selectstatenamelookup"
 				}
 			],
 			"scriptLines": [
@@ -56,6 +66,16 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> dfsourcedailypricinglab1",
+				"source(output(",
+				"          STATE_NAME as string,",
+				"          STATE_ID as integer,",
+				"          DWH_CREATED_DATE as timestamp,",
+				"          DWH_UPDATED_DATE as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> sourcedimstatelookup",
 				"dfsourcedailypricinglab1 select(mapColumn(",
 				"          STATE_NAME",
 				"     ),",
@@ -73,6 +93,11 @@
 				"     stepValue: 1L) ~> surrogateKeygeneratestateid",
 				"surrogateKeygeneratestateid derive(DWH_CREATED_DATE = currentDate(),",
 				"          DWH_UPDATED_DATE = currentDate()) ~> derivedColumn1",
+				"sourcedimstatelookup select(mapColumn(",
+				"          STATE_NAME",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectstatenamelookup",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
