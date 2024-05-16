@@ -126,11 +126,12 @@
 						"     format: 'query') ~> selectmaxstateid",
 						"sourcereaddailypricingdata select(mapColumn(",
 						"          SOURCE_FILE_DIM_COLUMN = PRODUCT_NAME,",
-						"          PRODUCT_NAME = PRODUCTGROUP_NAME",
+						"          PRODUCTGROUP_NAME",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> selectdimcolumnname",
-						"selectdimcolumnname aggregate(groupBy(SOURCE_FILE_DIM_COLUMN),",
+						"selectdimcolumnname aggregate(groupBy(SOURCE_FILE_DIM_COLUMN,",
+						"          PRODUCTGROUP_NAME),",
 						"     count_source_file_dim_column = count(SOURCE_FILE_DIM_COLUMN)) ~> aggregatefinduniquevalues",
 						"aggregatefinduniquevalues, selectdimlookup lookup(SOURCE_FILE_DIM_COLUMN == lookup_target_colum_value,",
 						"     multiple: false,",
@@ -144,6 +145,7 @@
 						"     broadcast: 'auto')~> joinmaxsurrogatekeyid",
 						"joinmaxsurrogatekeyid select(mapColumn(",
 						"          SOURCE_FILE_DIM_COLUMN,",
+						"          PRODUCTGROUP_NAME,",
 						"          MAX_SURROGATE_KEY_ID",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
@@ -172,10 +174,11 @@
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError',",
 						"     mapColumn(",
-						"          PRODUCTGROUP_NAME = SOURCE_FILE_DIM_COLUMN,",
+						"          PRODUCT_NAME = SOURCE_FILE_DIM_COLUMN,",
 						"          PRODUCT_ID = NEW_SURROGATE_KEY,",
 						"          DWH_CREATED_DATE,",
-						"          DWH_UPDATED_DATE",
+						"          DWH_UPDATED_DATE,",
+						"          PRODUCTGROUP_NAME",
 						"     )) ~> sinkdimensiontables"
 					]
 				}
@@ -536,6 +539,55 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "DF_report_daily_pricing_dim_product_table",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "DF_report_daily_pricing_dim_market_table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_report_daily_pricing_dim_product_table",
+								"type": "DataFlowReference",
+								"parameters": {
+									"dfl_prm_reporting_column_name": "'PRODUCT_NAME'",
+									"dfl_prm_reporting_schema_name": "'REPORTING'",
+									"dfl_prm_reporting_table_name": "'DIM_PRODUCT'",
+									"dfl_prm_reporting_table_id_column": "'PRODUCT_ID'"
+								},
+								"datasetParameters": {
+									"sourcereaddailypricingdata": {
+										"dst_prmt_landing_container_name": "landing",
+										"dst_prmt_landing_folder_name": "daily-pricing",
+										"dst_prmt_landing_file_name": "PW_MW_DR_01012023.csv"
+									},
+									"selectdimlookup": {},
+									"selectmaxstateid": {},
+									"sinkdimensiontables": {}
+								},
+								"linkedServiceParameters": {}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
 					}
 				],
 				"policy": {
@@ -547,7 +599,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_variety_table')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_variety_table')]",
+				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_product_table')]"
 			]
 		},
 		{
