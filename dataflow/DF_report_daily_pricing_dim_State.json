@@ -39,6 +39,12 @@
 				},
 				{
 					"name": "lookupdimtables"
+				},
+				{
+					"name": "filternewsourcevalues"
+				},
+				{
+					"name": "joinmaxsurrogatekeyid"
 				}
 			],
 			"scriptLines": [
@@ -91,7 +97,13 @@
 				"aggregatefinduniquevalues, selectdimlookup lookup(SOURCE_FILE_DIM_COLUMN == lookup_target_colum_value,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookupdimtables"
+				"     broadcast: 'auto')~> lookupdimtables",
+				"lookupdimtables filter(isNull(lookup_target_colum_value)) ~> filternewsourcevalues",
+				"filternewsourcevalues, selectmaxstateid join(!(isNull(SOURCE_FILE_DIM_COLUMN) && isNull(max_surrogate_key_id)),",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinmaxsurrogatekeyid"
 			]
 		}
 	}
