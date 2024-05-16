@@ -79,13 +79,33 @@
 					},
 					"Ls_source_properties_typeProperties_url": {
 						"value": "[parameters('Ls_source_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "GlobalPricingInsights-adf_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
 						"value": "[parameters('TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date')]"
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'GlobalPricingInsights-adf_ArmTemplate_0')]"
+			]
 		}
 	]
 }
