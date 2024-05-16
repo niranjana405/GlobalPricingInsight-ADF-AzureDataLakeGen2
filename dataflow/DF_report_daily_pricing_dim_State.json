@@ -61,9 +61,6 @@
 					"name": "surrogateKeygeneratenewid"
 				},
 				{
-					"name": "derivedColumn1"
-				},
-				{
 					"name": "derivedColumnADDNEWCOLUMNS"
 				}
 			],
@@ -133,8 +130,7 @@
 				"selectmapdimcolumns keyGenerate(output(SURROGATE_KEY_ID as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKeygeneratenewid",
-				"surrogateKeygeneratenewid derive() ~> derivedColumn1",
-				"derivedColumn1 derive(DWH_CREATED_DATE = currentDate(),",
+				"surrogateKeygeneratenewid derive(DWH_CREATED_DATE = currentDate(),",
 				"          DWH_UPDATED_DATE = currentDate(),",
 				"          NEW_SURROGATE_KEY = max_surrogate_key_id + SURROGATE_KEY_ID) ~> derivedColumnADDNEWCOLUMNS",
 				"derivedColumnADDNEWCOLUMNS sink(allowSchemaDrift: true,",
