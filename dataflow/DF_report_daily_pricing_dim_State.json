@@ -29,7 +29,15 @@
 					"name": "selectmaxstateid"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_SINK_ASQL_DIM_tables",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdimensiontables"
+				}
+			],
 			"transformations": [
 				{
 					"name": "selectdimcolumnname"
@@ -128,7 +136,29 @@
 				"surrogateKeygeneratenewid derive() ~> derivedColumn1",
 				"derivedColumn1 derive(DWH_CREATED_DATE = currentDate(),",
 				"          DWH_UPDATED_DATE = currentDate(),",
-				"          NEW_SURROGATE_KEY = max_surrogate_key_id + SURROGATE_KEY_ID) ~> derivedColumnADDNEWCOLUMNS"
+				"          NEW_SURROGATE_KEY = max_surrogate_key_id + SURROGATE_KEY_ID) ~> derivedColumnADDNEWCOLUMNS",
+				"derivedColumnADDNEWCOLUMNS sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          STATE_NAME as string,",
+				"          STATE_ID as integer,",
+				"          DWH_CREATED_DATE as timestamp,",
+				"          DWH_UPDATED_DATE as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          STATE_NAME = SOURCE_FILE_DIM_COLUMN,",
+				"          STATE_ID = NEW_SURROGATE_KEY,",
+				"          DWH_CREATED_DATE,",
+				"          DWH_UPDATED_DATE",
+				"     )) ~> sinkdimensiontables"
 			]
 		}
 	}
