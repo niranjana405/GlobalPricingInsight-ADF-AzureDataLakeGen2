@@ -10,6 +10,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "dfsourcedailypricinglab1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_dim_state_source_lookup",
+						"type": "DatasetReference"
+					},
+					"name": "sourcedimstatelookup"
 				}
 			],
 			"sinks": [
@@ -36,6 +43,15 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "selectdimstatelookup"
+				},
+				{
+					"name": "lookupNEWSTATENAME"
+				},
+				{
+					"name": "filternewstatename"
 				}
 			],
 			"scriptLines": [
@@ -56,6 +72,16 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> dfsourcedailypricinglab1",
+				"source(output(",
+				"          STATE_NAME as string,",
+				"          STATE_ID as integer,",
+				"          DWH_CREATED_DATE as timestamp,",
+				"          DWH_UPDATED_DATE as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> sourcedimstatelookup",
 				"dfsourcedailypricinglab1 select(mapColumn(",
 				"          STATE_NAME",
 				"     ),",
@@ -68,11 +94,21 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectexcludecountstatename",
-				"selectexcludecountstatename keyGenerate(output(STATE_ID as long),",
+				"filternewstatename keyGenerate(output(STATE_ID as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKeygeneratestateid",
 				"surrogateKeygeneratestateid derive(DWH_CREATED_DATE = currentDate(),",
 				"          DWH_UPDATED_DATE = currentDate()) ~> derivedColumn1",
+				"sourcedimstatelookup select(mapColumn(",
+				"          LOOKUP_STATE_NAME = STATE_NAME",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectdimstatelookup",
+				"selectexcludecountstatename, selectdimstatelookup lookup(STATE_NAME == LOOKUP_STATE_NAME,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookupNEWSTATENAME",
+				"lookupNEWSTATENAME filter(isNull(LOOKUP_STATE_NAME)) ~> filternewstatename",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
