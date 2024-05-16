@@ -851,7 +851,7 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     query: (concat('select max(',$dfl_prm_reporting_table_id_column, ')',' as max_surrogate_key_id ',  ' from ' ,$dfl_prm_reporting_schema_name, '.',$dfl_prm_reporting_table_name)),",
+						"     query: (concat('select COALESCE(MAX(',$dfl_prm_reporting_table_id_column, '),0) as MAX_SURROGATE_KEY_ID  FROM ' ,$dfl_prm_reporting_schema_name, '.',$dfl_prm_reporting_table_name)),",
 						"     format: 'query') ~> selectmaxstateid",
 						"sourcereaddailypricingdata select(mapColumn(",
 						"          SOURCE_FILE_DIM_COLUMN = STATE_NAME",
