@@ -1,0 +1,96 @@
+{
+	"name": "DS_SOURCE_DAILYPRICING",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"dst_prmt_landing_container_name": {
+				"type": "string"
+			},
+			"dst_prmt_landing_folder_name": {
+				"type": "string"
+			},
+			"dst_prmt_landing_file_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Transform"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().dst_prmt_landing_file_name",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().dst_prmt_landing_folder_name",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().dst_prmt_landing_container_name",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "DATE_OF_PRICING",
+				"type": "String"
+			},
+			{
+				"name": "ROW_ID",
+				"type": "String"
+			},
+			{
+				"name": "STATE_NAME",
+				"type": "String"
+			},
+			{
+				"name": "MARKET_NAME",
+				"type": "String"
+			},
+			{
+				"name": "PRODUCTGROUP_NAME",
+				"type": "String"
+			},
+			{
+				"name": "PRODUCT_NAME",
+				"type": "String"
+			},
+			{
+				"name": "VARIETY",
+				"type": "String"
+			},
+			{
+				"name": "ORIGIN",
+				"type": "String"
+			},
+			{
+				"name": "ARRIVAL_IN_TONNES",
+				"type": "String"
+			},
+			{
+				"name": "MINIMUM_PRICE",
+				"type": "String"
+			},
+			{
+				"name": "MAXIMUM_PRICE",
+				"type": "String"
+			},
+			{
+				"name": "MODAL_PRICE",
+				"type": "String"
+			}
+		]
+	}
+}

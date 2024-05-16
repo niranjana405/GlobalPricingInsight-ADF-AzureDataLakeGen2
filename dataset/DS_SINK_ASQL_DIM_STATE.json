@@ -1,0 +1,41 @@
+{
+	"name": "DS_SINK_ASQL_DIM_STATE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_sink_dailypricing_lab1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Transform"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "STATE_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "STATE_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DWH_CREATED_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DWH_UPDATED_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "reporting",
+			"table": "DIM_STATE"
+		}
+	}
+}

@@ -1,0 +1,98 @@
+{
+	"name": "DF_report_daily_pricing_dim_State",
+	"properties": {
+		"folder": {
+			"name": "TRANSFORM"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_SOURCE_DAILYPRICING",
+						"type": "DatasetReference"
+					},
+					"name": "sourcereaddailypricingdata"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_REPORT_DIM_TABLES_SOURCE",
+						"type": "DatasetReference"
+					},
+					"name": "selectdimlookup"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL_REPORT_DIM_TABLES_SOURCE",
+						"type": "DatasetReference"
+					},
+					"name": "selectmaxstateid"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "selectdimcolumnname"
+				},
+				{
+					"name": "aggregatefinduniquevalues"
+				},
+				{
+					"name": "lookupdimtables"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     dfl_prm_reporting_column_name as string,",
+				"     dfl_prm_reporting_schema_name as string,",
+				"     dfl_prm_reporting_table_name as string,",
+				"     dfl_prm_reporting_table_id_column as string",
+				"}",
+				"source(output(",
+				"          DATE_OF_PRICING as string,",
+				"          ROW_ID as string,",
+				"          STATE_NAME as string,",
+				"          MARKET_NAME as string,",
+				"          PRODUCTGROUP_NAME as string,",
+				"          PRODUCT_NAME as string,",
+				"          VARIETY as string,",
+				"          ORIGIN as string,",
+				"          ARRIVAL_IN_TONNES as string,",
+				"          MINIMUM_PRICE as string,",
+				"          MAXIMUM_PRICE as string,",
+				"          MODAL_PRICE as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcereaddailypricingdata",
+				"source(output(",
+				"          lookup_target_colum_value as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: (concat('select ' ,$dfl_prm_reporting_column_name, ' as lookup_target_colum_value ', ' from ' ,$dfl_prm_reporting_schema_name, '.' ,$dfl_prm_reporting_table_name)),",
+				"     format: 'query') ~> selectdimlookup",
+				"source(output(",
+				"          max_surrogate_key_id as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: (concat('select max(',$dfl_prm_reporting_table_id_column, ')',' as max_surrogate_key_id ',  ' from ' ,$dfl_prm_reporting_schema_name, '.',$dfl_prm_reporting_table_name)),",
+				"     format: 'query') ~> selectmaxstateid",
+				"sourcereaddailypricingdata select(mapColumn(",
+				"          SOURCE_FILE_DIM_COLUMN = STATE_NAME",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectdimcolumnname",
+				"selectdimcolumnname aggregate(groupBy(SOURCE_FILE_DIM_COLUMN),",
+				"     count_source_file_dim_column = count(SOURCE_FILE_DIM_COLUMN)) ~> aggregatefinduniquevalues",
+				"aggregatefinduniquevalues, selectdimlookup lookup(SOURCE_FILE_DIM_COLUMN == lookup_target_colum_value,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookupdimtables"
+			]
+		}
+	}
+}

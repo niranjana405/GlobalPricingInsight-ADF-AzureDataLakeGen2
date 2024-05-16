@@ -1,0 +1,15 @@
+{
+	"name": "DS_ASQL_REPORT_DIM_TABLES_SOURCE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_sink_dailypricing_lab1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Transform"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
