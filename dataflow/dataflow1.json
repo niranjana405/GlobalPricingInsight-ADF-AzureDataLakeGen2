@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "sourcedimstatelookup"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_source_Surrogate_key_state_id_dailypricing",
+						"type": "DatasetReference"
+					},
+					"name": "sourcemaxstateid"
 				}
 			],
 			"sinks": [
@@ -52,6 +59,9 @@
 				},
 				{
 					"name": "filternewstatename"
+				},
+				{
+					"name": "joinmaxstateidvalue"
 				}
 			],
 			"scriptLines": [
@@ -82,6 +92,14 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> sourcedimstatelookup",
+				"source(output(",
+				"          max_state_id as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select max(state_id) max_state_id  from [reporting].[DIM_STATE]',",
+				"     format: 'query') ~> sourcemaxstateid",
 				"dfsourcedailypricinglab1 select(mapColumn(",
 				"          STATE_NAME",
 				"     ),",
@@ -94,11 +112,12 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectexcludecountstatename",
-				"filternewstatename keyGenerate(output(STATE_ID as long),",
+				"joinmaxstateidvalue keyGenerate(output(STATE_ID as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKeygeneratestateid",
 				"surrogateKeygeneratestateid derive(DWH_CREATED_DATE = currentDate(),",
-				"          DWH_UPDATED_DATE = currentDate()) ~> derivedColumn1",
+				"          DWH_UPDATED_DATE = currentDate(),",
+				"          NEW_STATE_ID = max_state_id +STATE_ID) ~> derivedColumn1",
 				"sourcedimstatelookup select(mapColumn(",
 				"          LOOKUP_STATE_NAME = STATE_NAME",
 				"     ),",
@@ -109,6 +128,11 @@
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookupNEWSTATENAME",
 				"lookupNEWSTATENAME filter(isNull(LOOKUP_STATE_NAME)) ~> filternewstatename",
+				"filternewstatename, sourcemaxstateid join(!(isNull(STATE_NAME) && isNull(max_state_id)),",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinmaxstateidvalue",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
