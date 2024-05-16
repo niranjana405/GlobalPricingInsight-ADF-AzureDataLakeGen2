@@ -50,10 +50,6 @@
 							"type": "JsonReadSettings"
 						}
 					},
-					"dataset": {
-						"referenceName": "DS_dailypricing_metadata",
-						"type": "DatasetReference"
-					},
 					"firstRowOnly": false
 				}
 			},
