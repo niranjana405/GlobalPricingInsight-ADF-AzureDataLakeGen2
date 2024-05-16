@@ -1,5 +1,5 @@
 {
-	"name": "DS_SINK_ASQL_DIM_STATE",
+	"name": "DS_SINK_ASQL_DIM_MARKET",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_sink_dailypricing_lab1",
@@ -12,11 +12,11 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "STATE_NAME",
+				"name": "MARKET_NAME",
 				"type": "varchar"
 			},
 			{
-				"name": "STATE_ID",
+				"name": "MARKET_ID",
 				"type": "int",
 				"precision": 10
 			},
@@ -35,7 +35,7 @@
 		],
 		"typeProperties": {
 			"schema": "reporting",
-			"table": "DIM_STATE"
+			"table": "DIM_MARKET"
 		}
 	}
 }

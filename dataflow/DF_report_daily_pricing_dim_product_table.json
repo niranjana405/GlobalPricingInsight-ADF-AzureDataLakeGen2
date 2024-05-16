@@ -1,5 +1,5 @@
 {
-	"name": "DF_report_daily_pricing_dim_State_table",
+	"name": "DF_report_daily_pricing_dim_product_table",
 	"properties": {
 		"folder": {
 			"name": "TRANSFORM"
@@ -32,7 +32,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DS_SINK_ASQL_DIM_STATE",
+						"referenceName": "DS_SINK_ASQL_DIM_PRODUCT",
 						"type": "DatasetReference"
 					},
 					"name": "sinkdimensiontables"
@@ -105,7 +105,8 @@
 				"     query: (concat('SELECT COALESCE(MAX(' , $dfl_prm_reporting_table_id_column , '),0) as MAX_SURROGATE_KEY_ID  FROM ' , $dfl_prm_reporting_schema_name , '.' , $dfl_prm_reporting_table_name)),",
 				"     format: 'query') ~> selectmaxstateid",
 				"sourcereaddailypricingdata select(mapColumn(",
-				"          SOURCE_FILE_DIM_COLUMN = STATE_NAME",
+				"          SOURCE_FILE_DIM_COLUMN = PRODUCTGROUP_NAME,",
+				"          PRODUCT_NAME",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectdimcolumnname",
@@ -136,8 +137,9 @@
 				"derivedColumnADDNEWCOLUMNS sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          STATE_NAME as string,",
-				"          STATE_ID as integer,",
+				"          PRODUCT_NAME as string,",
+				"          PRODUCTGROUP_NAME as string,",
+				"          PRODUCT_ID as integer,",
 				"          DWH_CREATED_DATE as timestamp,",
 				"          DWH_UPDATED_DATE as timestamp",
 				"     ),",
@@ -150,8 +152,8 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
-				"          STATE_NAME = SOURCE_FILE_DIM_COLUMN,",
-				"          STATE_ID = NEW_SURROGATE_KEY,",
+				"          PRODUCTGROUP_NAME = SOURCE_FILE_DIM_COLUMN,",
+				"          PRODUCT_ID = NEW_SURROGATE_KEY,",
 				"          DWH_CREATED_DATE,",
 				"          DWH_UPDATED_DATE",
 				"     )) ~> sinkdimensiontables"
