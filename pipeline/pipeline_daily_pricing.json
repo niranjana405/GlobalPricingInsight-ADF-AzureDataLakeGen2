@@ -51,7 +51,10 @@
 					},
 					"dataset": {
 						"referenceName": "source1",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"dst_relative_url": "/labs/lab1/PW_MW_DR_01012023.csv"
+						}
 					},
 					"firstRowOnly": false
 				}
