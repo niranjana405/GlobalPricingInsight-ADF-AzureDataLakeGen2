@@ -154,7 +154,7 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
-				"          PRODUCTGROUP_NAME = SOURCE_FILE_DIM_COLUMN,",
+				"          PRODUCT_NAME = SOURCE_FILE_DIM_COLUMN,",
 				"          PRODUCT_ID = NEW_SURROGATE_KEY,",
 				"          DWH_CREATED_DATE,",
 				"          DWH_UPDATED_DATE,",
