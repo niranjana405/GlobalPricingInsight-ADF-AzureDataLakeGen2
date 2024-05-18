@@ -39,6 +39,57 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
+			},
+			{
+				"name": "If Condition Check file list exist",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata List Folder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@empty(activity('Get Metadata List Folder').output.childItems)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "condition_output",
+								"value": "false"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "condition_output",
+								"value": "true"
+							}
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
@@ -47,6 +98,11 @@
 			},
 			"prm_end_date": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"condition_output": {
+				"type": "String"
 			}
 		},
 		"folder": {
