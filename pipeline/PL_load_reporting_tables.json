@@ -24,6 +24,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"modifiedDatetimeStart": {
 							"value": "@pipeline().parameters.pln_prm_source_file_start_date",
 							"type": "Expression"
@@ -70,7 +71,13 @@
 									"referenceName": "PL_load_reporting_dim_tables",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"pln_prm_source_files_list": {
+										"value": "@activity('Get Metadata List Files').output.childItems",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
