@@ -453,7 +453,7 @@
 				},
 				"parameters": {
 					"pln_prm_source_files_list": {
-						"type": "string"
+						"type": "array"
 					}
 				},
 				"folder": {
