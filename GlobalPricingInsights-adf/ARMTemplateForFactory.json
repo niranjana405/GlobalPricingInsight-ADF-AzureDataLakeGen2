@@ -317,7 +317,14 @@
 								{
 									"name": "DF_report_daily_pricing_dim_market_table",
 									"type": "ExecuteDataFlow",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "DF_report_daily_pricing_dim_State",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "0.12:00:00",
 										"retry": 0,
@@ -358,7 +365,14 @@
 								{
 									"name": "DF_report_daily_pricing_dim_variety_table",
 									"type": "ExecuteDataFlow",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "DF_report_daily_pricing_dim_market_table",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "0.12:00:00",
 										"retry": 0,
@@ -399,7 +413,14 @@
 								{
 									"name": "DF_report_daily_pricing_dim_product_table",
 									"type": "ExecuteDataFlow",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "DF_report_daily_pricing_dim_variety_table",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "0.12:00:00",
 										"retry": 0,
