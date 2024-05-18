@@ -71,7 +71,13 @@
 									"referenceName": "PL_load_reporting_dim_table_4b",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"pln_prn_source_file_list": {
+										"value": "@activity('Get Metadata List Folder').output.childItems",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
@@ -83,9 +89,6 @@
 				"type": "string"
 			},
 			"prm_end_date": {
-				"type": "string"
-			},
-			"pln_prm_sourcefile_list": {
 				"type": "string"
 			}
 		},

@@ -8,6 +8,10 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.pln_prn_source_file_list",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "Set variable1",
@@ -17,12 +21,20 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": ""
+							}
 						}
 					]
 				}
 			}
 		],
+		"parameters": {
+			"pln_prn_source_file_list": {
+				"type": "array"
+			}
+		},
 		"folder": {
 			"name": "labs"
 		},
