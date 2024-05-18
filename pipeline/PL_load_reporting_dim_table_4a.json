@@ -24,6 +24,15 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"modifiedDatetimeStart": {
+							"value": "@pipeline().parameters.prm_start_Date",
+							"type": "Expression"
+						},
+						"modifiedDatetimeEnd": {
+							"value": "@pipeline().parameters.prm_end_date",
+							"type": "Expression"
+						},
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -32,6 +41,14 @@
 				}
 			}
 		],
+		"parameters": {
+			"prm_start_Date": {
+				"type": "string"
+			},
+			"prm_end_date": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "labs"
 		},
