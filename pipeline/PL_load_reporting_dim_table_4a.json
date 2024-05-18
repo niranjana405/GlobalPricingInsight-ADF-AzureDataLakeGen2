@@ -59,33 +59,19 @@
 					},
 					"ifFalseActivities": [
 						{
-							"name": "Set variable2",
-							"type": "SetVariable",
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
 							"dependsOn": [],
 							"policy": {
-								"secureOutput": false,
 								"secureInput": false
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "condition_output",
-								"value": "false"
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "Set variable1",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"policy": {
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "condition_output",
-								"value": "true"
+								"pipeline": {
+									"referenceName": "PL_load_reporting_dim_table_4b",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
 							}
 						}
 					]
@@ -98,11 +84,9 @@
 			},
 			"prm_end_date": {
 				"type": "string"
-			}
-		},
-		"variables": {
-			"condition_output": {
-				"type": "String"
+			},
+			"pln_prm_sourcefile_list": {
+				"type": "string"
 			}
 		},
 		"folder": {
