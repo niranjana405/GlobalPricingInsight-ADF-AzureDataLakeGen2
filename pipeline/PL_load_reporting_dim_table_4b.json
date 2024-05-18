@@ -14,7 +14,7 @@
 					},
 					"activities": [
 						{
-							"name": "Set variable1",
+							"name": "Set variable2",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
@@ -23,7 +23,11 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": ""
+								"variableName": "source_file_name",
+								"value": {
+									"value": "@item().name",
+									"type": "Expression"
+								}
 							}
 						}
 					]
@@ -33,6 +37,11 @@
 		"parameters": {
 			"pln_prn_source_file_list": {
 				"type": "array"
+			}
+		},
+		"variables": {
+			"source_file_name": {
+				"type": "String"
 			}
 		},
 		"folder": {
