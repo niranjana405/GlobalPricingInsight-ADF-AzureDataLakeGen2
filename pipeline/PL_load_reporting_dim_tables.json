@@ -172,6 +172,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"pln_prm_source_files_list": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Transform"
 		},
