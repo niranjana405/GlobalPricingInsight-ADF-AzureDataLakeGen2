@@ -152,33 +152,25 @@
 							},
 							"ifFalseActivities": [
 								{
-									"name": "Set variable2",
-									"type": "SetVariable",
+									"name": "Execute Pipeline1",
+									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"policy": {
-										"secureOutput": false,
 										"secureInput": false
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"variableName": "condition_output",
-										"value": "false"
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "condition_output",
-										"value": "true"
+										"pipeline": {
+											"referenceName": "PL_load_reporting_dim_table_4b",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"pln_prn_source_file_list": {
+												"value": "@activity('Get Metadata List Folder').output.childItems",
+												"type": "Expression"
+											}
+										}
 									}
 								}
 							]
@@ -196,8 +188,64 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "labs"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_daily_pricing_lab4a')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_load_reporting_dim_table_4b')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_load_reporting_dim_table_4b')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.pln_prn_source_file_list",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Set variable2",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "source_file_name",
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"pln_prn_source_file_list": {
+						"type": "array"
+					}
+				},
 				"variables": {
-					"condition_output": {
+					"source_file_name": {
 						"type": "String"
 					}
 				},
@@ -206,9 +254,7 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_daily_pricing_lab4a')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_load_reporting_dim_tables')]",
