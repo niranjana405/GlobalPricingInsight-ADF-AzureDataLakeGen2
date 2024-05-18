@@ -926,7 +926,10 @@
 												"sourcereaddailypricingdata": {
 													"dst_prmt_landing_container_name": "landing",
 													"dst_prmt_landing_folder_name": "daily-pricing",
-													"dst_prmt_landing_file_name": "PW_MW_DR_01012023.csv"
+													"dst_prmt_landing_file_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
 												},
 												"selectdimlookup": {},
 												"selectmaxstateid": {},
@@ -974,7 +977,10 @@
 												"sourcereaddailypricingdata": {
 													"dst_prmt_landing_container_name": "landing",
 													"dst_prmt_landing_folder_name": "daily-pricing",
-													"dst_prmt_landing_file_name": "PW_MW_DR_01012023.csv"
+													"dst_prmt_landing_file_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
 												},
 												"selectdimlookup": {},
 												"selectmaxstateid": {},
@@ -1022,7 +1028,10 @@
 												"sourcereaddailypricingdata": {
 													"dst_prmt_landing_container_name": "landing",
 													"dst_prmt_landing_folder_name": "daily-pricing",
-													"dst_prmt_landing_file_name": "PW_MW_DR_01012023.csv"
+													"dst_prmt_landing_file_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
 												},
 												"selectdimlookup": {},
 												"selectmaxstateid": {},
@@ -1070,7 +1079,10 @@
 												"sourcereaddailypricingdata": {
 													"dst_prmt_landing_container_name": "landing",
 													"dst_prmt_landing_folder_name": "daily-pricing",
-													"dst_prmt_landing_file_name": "PW_MW_DR_01012023.csv"
+													"dst_prmt_landing_file_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
 												},
 												"selectdimlookup": {},
 												"selectmaxstateid": {},
@@ -1095,6 +1107,15 @@
 				"parameters": {
 					"pln_prm_source_files_list": {
 						"type": "array"
+					},
+					"pln_prm_landing_container_name": {
+						"type": "string"
+					},
+					"pln_prm_landing_folder_name": {
+						"type": "string"
+					},
+					"pln_prm_landing_file_name": {
+						"type": "string"
 					}
 				},
 				"folder": {
