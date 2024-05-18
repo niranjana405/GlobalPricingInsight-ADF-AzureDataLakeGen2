@@ -1,0 +1,75 @@
+{
+	"name": "DS_ADLS_daily_pricing_lab4a",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "labs"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "daily-pricing",
+				"fileSystem": "landing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "DATE_OF_PRICING",
+				"type": "String"
+			},
+			{
+				"name": "ROW_ID",
+				"type": "String"
+			},
+			{
+				"name": "STATE_NAME",
+				"type": "String"
+			},
+			{
+				"name": "MARKET_NAME",
+				"type": "String"
+			},
+			{
+				"name": "PRODUCTGROUP_NAME",
+				"type": "String"
+			},
+			{
+				"name": "PRODUCT_NAME",
+				"type": "String"
+			},
+			{
+				"name": "VARIETY",
+				"type": "String"
+			},
+			{
+				"name": "ORIGIN",
+				"type": "String"
+			},
+			{
+				"name": "ARRIVAL_IN_TONNES",
+				"type": "String"
+			},
+			{
+				"name": "MINIMUM_PRICE",
+				"type": "String"
+			},
+			{
+				"name": "MAXIMUM_PRICE",
+				"type": "String"
+			},
+			{
+				"name": "MODAL_PRICE",
+				"type": "String"
+			}
+		]
+	}
+}
