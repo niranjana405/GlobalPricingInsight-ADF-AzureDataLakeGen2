@@ -899,6 +899,7 @@
 								"value": "@pipeline().parameters.pln_prm_source_files_list",
 								"type": "Expression"
 							},
+							"isSequential": true,
 							"activities": [
 								{
 									"name": "DF_report_daily_pricing_dim_State",
