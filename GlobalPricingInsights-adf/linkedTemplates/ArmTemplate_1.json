@@ -924,8 +924,14 @@
 											},
 											"datasetParameters": {
 												"sourcereaddailypricingdata": {
-													"dst_prmt_landing_container_name": "landing",
-													"dst_prmt_landing_folder_name": "daily-pricing",
+													"dst_prmt_landing_container_name": {
+														"value": "@pipeline().parameters.pln_prm_landing_container_name",
+														"type": "Expression"
+													},
+													"dst_prmt_landing_folder_name": {
+														"value": "@pipeline().parameters.pln_prm_landing_folder_name",
+														"type": "Expression"
+													},
 													"dst_prmt_landing_file_name": {
 														"value": "@item().name",
 														"type": "Expression"
@@ -975,8 +981,14 @@
 											},
 											"datasetParameters": {
 												"sourcereaddailypricingdata": {
-													"dst_prmt_landing_container_name": "landing",
-													"dst_prmt_landing_folder_name": "daily-pricing",
+													"dst_prmt_landing_container_name": {
+														"value": "@pipeline().parameters.pln_prm_landing_container_name",
+														"type": "Expression"
+													},
+													"dst_prmt_landing_folder_name": {
+														"value": "@pipeline().parameters.pln_prm_landing_folder_name",
+														"type": "Expression"
+													},
 													"dst_prmt_landing_file_name": {
 														"value": "@item().name",
 														"type": "Expression"
@@ -1026,8 +1038,14 @@
 											},
 											"datasetParameters": {
 												"sourcereaddailypricingdata": {
-													"dst_prmt_landing_container_name": "landing",
-													"dst_prmt_landing_folder_name": "daily-pricing",
+													"dst_prmt_landing_container_name": {
+														"value": "@pipeline().parameters.pln_prm_landing_container_name",
+														"type": "Expression"
+													},
+													"dst_prmt_landing_folder_name": {
+														"value": "@pipeline().parameters.pln_prm_landing_folder_name",
+														"type": "Expression"
+													},
 													"dst_prmt_landing_file_name": {
 														"value": "@item().name",
 														"type": "Expression"
@@ -1077,8 +1095,14 @@
 											},
 											"datasetParameters": {
 												"sourcereaddailypricingdata": {
-													"dst_prmt_landing_container_name": "landing",
-													"dst_prmt_landing_folder_name": "daily-pricing",
+													"dst_prmt_landing_container_name": {
+														"value": "@pipeline().parameters.pln_prm_landing_container_name",
+														"type": "Expression"
+													},
+													"dst_prmt_landing_folder_name": {
+														"value": "@pipeline().parameters.pln_prm_landing_folder_name",
+														"type": "Expression"
+													},
 													"dst_prmt_landing_file_name": {
 														"value": "@item().name",
 														"type": "Expression"
@@ -1109,10 +1133,12 @@
 						"type": "array"
 					},
 					"pln_prm_landing_container_name": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "landing"
 					},
 					"pln_prm_landing_folder_name": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "daily-pricing"
 					},
 					"pln_prm_landing_file_name": {
 						"type": "string"
