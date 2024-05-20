@@ -1,0 +1,43 @@
+{
+	"name": "DS_ADLS_BRONZE_GEOLOCATION_DATA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_GEOLOCATION_DATALAKE",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"prm_dst_container_name": {
+				"type": "string"
+			},
+			"prm_dst_folder_name": {
+				"type": "string"
+			},
+			"prm_dst_file_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "INGEST"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().prm_dst_file_name",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().prm_dst_folder_name",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().prm_dst_container_name",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	}
+}
