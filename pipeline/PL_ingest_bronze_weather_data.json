@@ -99,7 +99,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"dst_prm_relative_url": {
-											"value": "@concat('v1/archive?latitude=',item().latitude,'&longitude=',item().longitude,'&startdate=',variables('pln_var_weather_start_date'),'&enddate=',variables('pln_var_weather_end_date'),'&daily=weather-code,temperature_2m_max,temperature_2m_min,rain_sum&timezone=auto')",
+											"value": "@concat('v1/archive?latitude=',item().latitude,'&longitude=',item().longitude,'&startdate=',variables('pln_var_weather_start_date'),'&enddate=',variables('pln_var_weather_end_date'),'&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum&timezone=auto')",
 											"type": "Expression"
 										}
 									}
