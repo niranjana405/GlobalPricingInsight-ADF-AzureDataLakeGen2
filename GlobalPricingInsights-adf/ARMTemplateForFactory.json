@@ -199,7 +199,10 @@
 											"referenceName": "DS_HTTP_SOURCE_GEOLOCATION_DATA",
 											"type": "DatasetReference",
 											"parameters": {
-												"prm_dst_relative_url": "v1/search?name=kovilpatti&count=10&language=en&format=json"
+												"prm_dst_relative_url": {
+													"value": "@concat('v1/search?name=',item().MARKET_NAME,'&count=',pipeline().parameters.pln_prm_rest_api_result_count,'&language=en&format=',pipeline().parameters.pln_prm_rest_api_result_format)",
+													"type": "Expression"
+												}
 											}
 										}
 									],
@@ -208,9 +211,18 @@
 											"referenceName": "DS_ADLS_BRONZE_GEOLOCATION_DATA",
 											"type": "DatasetReference",
 											"parameters": {
-												"prm_dst_container_name": "pricingdatalake",
-												"prm_dst_folder_name": "bronze",
-												"prm_dst_file_name": "kovilpatti.json"
+												"prm_dst_container_name": {
+													"value": "@item().DATALAKE_CONTAINER_NAME",
+													"type": "Expression"
+												},
+												"prm_dst_folder_name": {
+													"value": "@item().DATALAKE_FOLDER_NAME",
+													"type": "Expression"
+												},
+												"prm_dst_file_name": {
+													"value": "@item().MARKET_NAME",
+													"type": "Expression"
+												}
 											}
 										}
 									]
