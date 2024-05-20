@@ -1407,11 +1407,13 @@
 						"          generationtime_ms as double,",
 						"          results as (id as integer, name as string, latitude as double, longitude as double, elevation as double, feature_code as string, country_code as string, admin1_id as integer, timezone as string, country_id as integer, country as string, admin1 as string)[]",
 						"     ),",
+						"     partitionFileNames:['metadata/weatherdata-geocoordinates.json'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sinkmetadatafolder"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sinkmetadatafolder"
 					]
 				}
 			},
@@ -1905,6 +1907,59 @@
 				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_market_table')]",
 				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_variety_table')]",
 				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_product_table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_trans_geolocation_json_file_lab5')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_trans_geolocation_json_file_lab5",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_trans_geolocation_json_file_lab5",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcereadgeolocationjsonfiles": {
+										"prm_dst_container_name": "pricingdatalake",
+										"prm_dst_folder_name": "bronze/geo-location",
+										"prm_dst_file_name": "Abhanpur.json"
+									},
+									"sinkmetadatafolder": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "labs"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_trans_geolocation_json_file_lab5')]"
 			]
 		},
 		{
