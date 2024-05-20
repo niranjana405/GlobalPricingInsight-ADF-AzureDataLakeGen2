@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage2'"
 		},
+		"LS_GEOLOCATION_DATALAKE_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_GEOLOCATION_DATALAKE'"
+		},
 		"LS_sink_dailypricing_lab1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_sink_dailypricing_lab1'"
@@ -24,6 +28,10 @@
 			"defaultValue": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
 		"AzureDataLakeStorage2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://globalpricingdatagen2.dfs.core.windows.net/"
+		},
+		"LS_GEOLOCATION_DATALAKE_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
@@ -72,6 +80,9 @@
 					"AzureDataLakeStorage2_accountKey": {
 						"value": "[parameters('AzureDataLakeStorage2_accountKey')]"
 					},
+					"LS_GEOLOCATION_DATALAKE_accountKey": {
+						"value": "[parameters('LS_GEOLOCATION_DATALAKE_accountKey')]"
+					},
 					"LS_sink_dailypricing_lab1_connectionString": {
 						"value": "[parameters('LS_sink_dailypricing_lab1_connectionString')]"
 					},
@@ -80,6 +91,9 @@
 					},
 					"AzureDataLakeStorage2_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage2_properties_typeProperties_url')]"
+					},
+					"LS_GEOLOCATION_DATALAKE_properties_typeProperties_url": {
+						"value": "[parameters('LS_GEOLOCATION_DATALAKE_properties_typeProperties_url')]"
 					},
 					"LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url": {
 						"value": "[parameters('LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url')]"

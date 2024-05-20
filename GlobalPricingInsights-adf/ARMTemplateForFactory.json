@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage2'"
 		},
+		"LS_GEOLOCATION_DATALAKE_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_GEOLOCATION_DATALAKE'"
+		},
 		"LS_sink_dailypricing_lab1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_sink_dailypricing_lab1'"
@@ -24,6 +28,10 @@
 			"defaultValue": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
 		"AzureDataLakeStorage2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://globalpricingdatagen2.dfs.core.windows.net/"
+		},
+		"LS_GEOLOCATION_DATALAKE_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
@@ -829,6 +837,54 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_BRONZE_GEOLOCATION_DATA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_GEOLOCATION_DATALAKE",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"prm_dst_container_name": {
+						"type": "string"
+					},
+					"prm_dst_folder_name": {
+						"type": "string"
+					},
+					"prm_dst_file_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "INGEST"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().prm_dst_file_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().prm_dst_folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().prm_dst_container_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_ADLS_daily_pricing_lab4a')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1572,6 +1628,23 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('AzureDataLakeStorage2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_GEOLOCATION_DATALAKE')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('LS_GEOLOCATION_DATALAKE_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('LS_GEOLOCATION_DATALAKE_accountKey')]"
 					}
 				}
 			},

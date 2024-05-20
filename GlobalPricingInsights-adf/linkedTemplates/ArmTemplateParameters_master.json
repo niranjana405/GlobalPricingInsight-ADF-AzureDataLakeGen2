@@ -11,6 +11,9 @@
 		"AzureDataLakeStorage2_accountKey": {
 			"value": ""
 		},
+		"LS_GEOLOCATION_DATALAKE_accountKey": {
+			"value": ""
+		},
 		"LS_sink_dailypricing_lab1_connectionString": {
 			"value": ""
 		},
@@ -18,6 +21,9 @@
 			"value": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
 		"AzureDataLakeStorage2_properties_typeProperties_url": {
+			"value": "https://globalpricingdatagen2.dfs.core.windows.net/"
+		},
+		"LS_GEOLOCATION_DATALAKE_properties_typeProperties_url": {
 			"value": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
 		"LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url": {
