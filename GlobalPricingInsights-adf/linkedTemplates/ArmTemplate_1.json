@@ -6,16 +6,275 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "GlobalPricingInsights-adf"
-		},
-		"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SINK_ASQL_DIM_STATE')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sink_dailypricing_lab1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "STATE_NAME",
+						"type": "varchar"
+					},
+					{
+						"name": "STATE_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DWH_CREATED_DATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DWH_UPDATED_DATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "reporting",
+					"table": "DIM_STATE"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SINK_ASQL_DIM_VARIETY')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sink_dailypricing_lab1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "VARIETY",
+						"type": "varchar"
+					},
+					{
+						"name": "VARIETY_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DWH_CREATED_DATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DWH_UPDATED_DATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "reporting",
+					"table": "DIM_VARIETY"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SOURCE_DAILYPRICING')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"dst_prmt_landing_container_name": {
+						"type": "string"
+					},
+					"dst_prmt_landing_folder_name": {
+						"type": "string"
+					},
+					"dst_prmt_landing_file_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().dst_prmt_landing_file_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().dst_prmt_landing_folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().dst_prmt_landing_container_name",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "DATE_OF_PRICING",
+						"type": "String"
+					},
+					{
+						"name": "ROW_ID",
+						"type": "String"
+					},
+					{
+						"name": "STATE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "MARKET_NAME",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCTGROUP_NAME",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCT_NAME",
+						"type": "String"
+					},
+					{
+						"name": "VARIETY",
+						"type": "String"
+					},
+					{
+						"name": "ORIGIN",
+						"type": "String"
+					},
+					{
+						"name": "ARRIVAL_IN_TONNES",
+						"type": "String"
+					},
+					{
+						"name": "MINIMUM_PRICE",
+						"type": "String"
+					},
+					{
+						"name": "MAXIMUM_PRICE",
+						"type": "String"
+					},
+					{
+						"name": "MODAL_PRICE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SOURCE_DAILYPRICING_lab1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "PW_MW_DR_01012023.csv",
+						"folderPath": "daily-pricing",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "DATE_OF_PRICING",
+						"type": "String"
+					},
+					{
+						"name": "ROW_ID",
+						"type": "String"
+					},
+					{
+						"name": "STATE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "MARKET_NAME",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCTGROUP_NAME",
+						"type": "String"
+					},
+					{
+						"name": "PRODUCT_NAME",
+						"type": "String"
+					},
+					{
+						"name": "VARIETY",
+						"type": "String"
+					},
+					{
+						"name": "ORIGIN",
+						"type": "String"
+					},
+					{
+						"name": "ARRIVAL_IN_TONNES",
+						"type": "String"
+					},
+					{
+						"name": "MINIMUM_PRICE",
+						"type": "String"
+					},
+					{
+						"name": "MAXIMUM_PRICE",
+						"type": "String"
+					},
+					{
+						"name": "MODAL_PRICE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_dim_state_source_lookup')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -359,6 +618,219 @@
 					"pln_prm_rest_api_result_format": {
 						"type": "string",
 						"defaultValue": "json"
+					}
+				},
+				"folder": {
+					"name": "Ingest"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_ingest_bronze_weather_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup Read weather metadata files",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Set variable Weather End date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "DS_ADLS_JSON_WEATHER_METADATA",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Iterate Weather Metadata",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Read weather metadata files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Read weather metadata files').output.value",
+								"type": "Expression"
+							},
+							"batchCount": 10,
+							"activities": [
+								{
+									"name": "Copy data Weather Details",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "GET"
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "DS_HTTP_SOURCE_WEATHER_DATA",
+											"type": "DatasetReference",
+											"parameters": {
+												"dst_prm_relative_url": {
+													"value": "@concat('v1/archive?latitude=',item().latitude,'&longitude=',item().longitude,'&startdate=',variables('pln_var_weather_start_date'),'&enddate=',variables('pln_var_weather_end_date'),'&daily=weather-code,temperature_2m_max,temperature_2m_min,rain_sum&timezone=auto')",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DS_ADLS_BRONZE_WEATHER_DATA",
+											"type": "DatasetReference",
+											"parameters": {
+												"dst_prm_container_name": {
+													"value": "@item().datalake_container_name",
+													"type": "Expression"
+												},
+												"dst_prm_folder_name": {
+													"value": "@item().datalake_folder_name",
+													"type": "Expression"
+												},
+												"dst_prm_file_name": {
+													"value": "@item().market_name",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Set variable Start Date",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pln_var_weather_start_date",
+							"value": {
+								"value": "@formatDateTime(pipeline().parameters.pln_prm_weather_start_date,'yyyy-MM-dd')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set variable Weather End date",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Set variable Start Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "pln_var_weather_end_date",
+							"value": {
+								"value": "@formatDateTime(pipeline().parameters.pln_prm_weather_end_date,'yyyy-MM-dd')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"pln_prm_weather_start_date": {
+						"type": "string"
+					},
+					"pln_prm_weather_end_date": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"pln_var_weather_start_date": {
+						"type": "String"
+					},
+					"pln_var_weather_end_date": {
+						"type": "String"
 					}
 				},
 				"folder": {
@@ -824,7 +1296,10 @@
 					]
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SOURCE_DAILYPRICING')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SINK_ASQL_DIM_STATE')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DF_report_daily_pricing_dim_market_table')]",
@@ -988,7 +1463,9 @@
 					]
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SOURCE_DAILYPRICING')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DF_report_daily_pricing_dim_product_table')]",
@@ -1157,7 +1634,9 @@
 					]
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SOURCE_DAILYPRICING')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DF_report_daily_pricing_dim_variety_table')]",
@@ -1321,7 +1800,10 @@
 					]
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SOURCE_DAILYPRICING')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SINK_ASQL_DIM_VARIETY')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DF_trans_geolocation_json_file_lab5')]",
@@ -1579,6 +2061,7 @@
 				}
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SOURCE_DAILYPRICING_lab1')]",
 				"[concat(variables('factoryId'), '/datasets/DS_dim_state_source_lookup')]",
 				"[concat(variables('factoryId'), '/datasets/DS_source_Surrogate_key_state_id_dailypricing')]",
 				"[concat(variables('factoryId'), '/datasets/DS_sink_dailypricing_lab1')]"
@@ -1633,476 +2116,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_load_reporting_dim_tables')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEachIterate Source files",
-						"type": "ForEach",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@pipeline().parameters.pln_prm_source_files_list",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "DF_report_daily_pricing_dim_State",
-									"type": "ExecuteDataFlow",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataflow": {
-											"referenceName": "DF_report_daily_pricing_dim_State_table",
-											"type": "DataFlowReference",
-											"parameters": {
-												"dfl_prm_reporting_column_name": "'STATE_NAME'",
-												"dfl_prm_reporting_schema_name": "'REPORTING'",
-												"dfl_prm_reporting_table_name": "'DIM_STATE'",
-												"dfl_prm_reporting_table_id_column": "'STATE_ID'"
-											},
-											"datasetParameters": {
-												"sourcereaddailypricingdata": {
-													"dst_prmt_landing_container_name": {
-														"value": "@pipeline().parameters.pln_prm_landing_container_name",
-														"type": "Expression"
-													},
-													"dst_prmt_landing_folder_name": {
-														"value": "@pipeline().parameters.pln_prm_landing_folder_name",
-														"type": "Expression"
-													},
-													"dst_prmt_landing_file_name": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												},
-												"selectdimlookup": {},
-												"selectmaxstateid": {},
-												"sinkdimensiontables": {}
-											}
-										},
-										"staging": {},
-										"compute": {
-											"coreCount": 8,
-											"computeType": "General"
-										},
-										"traceLevel": "Fine"
-									}
-								},
-								{
-									"name": "DF_report_daily_pricing_dim_market_table",
-									"type": "ExecuteDataFlow",
-									"dependsOn": [
-										{
-											"activity": "DF_report_daily_pricing_dim_State",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataflow": {
-											"referenceName": "DF_report_daily_pricing_dim_market_table",
-											"type": "DataFlowReference",
-											"parameters": {
-												"dfl_prm_reporting_column_name": "'MARKET_NAME'",
-												"dfl_prm_reporting_schema_name": "'REPORTING'",
-												"dfl_prm_reporting_table_name": "'DIM_MARKET'",
-												"dfl_prm_reporting_table_id_column": "'MARKET_ID'"
-											},
-											"datasetParameters": {
-												"sourcereaddailypricingdata": {
-													"dst_prmt_landing_container_name": {
-														"value": "@pipeline().parameters.pln_prm_landing_container_name",
-														"type": "Expression"
-													},
-													"dst_prmt_landing_folder_name": {
-														"value": "@pipeline().parameters.pln_prm_landing_folder_name",
-														"type": "Expression"
-													},
-													"dst_prmt_landing_file_name": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												},
-												"selectdimlookup": {},
-												"selectmaxstateid": {},
-												"sinkdimensiontables": {}
-											}
-										},
-										"staging": {},
-										"compute": {
-											"coreCount": 8,
-											"computeType": "General"
-										},
-										"traceLevel": "Fine"
-									}
-								},
-								{
-									"name": "DF_report_daily_pricing_dim_variety_table",
-									"type": "ExecuteDataFlow",
-									"dependsOn": [
-										{
-											"activity": "DF_report_daily_pricing_dim_market_table",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataflow": {
-											"referenceName": "DF_report_daily_pricing_dim_variety_table",
-											"type": "DataFlowReference",
-											"parameters": {
-												"dfl_prm_reporting_column_name": "'VARIETY'",
-												"dfl_prm_reporting_schema_name": "'REPORTING'",
-												"dfl_prm_reporting_table_name": "'DIM_VARIETY'",
-												"dfl_prm_reporting_table_id_column": "'VARIETY_ID'"
-											},
-											"datasetParameters": {
-												"sourcereaddailypricingdata": {
-													"dst_prmt_landing_container_name": {
-														"value": "@pipeline().parameters.pln_prm_landing_container_name",
-														"type": "Expression"
-													},
-													"dst_prmt_landing_folder_name": {
-														"value": "@pipeline().parameters.pln_prm_landing_folder_name",
-														"type": "Expression"
-													},
-													"dst_prmt_landing_file_name": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												},
-												"selectdimlookup": {},
-												"selectmaxstateid": {},
-												"sinkdimensiontables": {}
-											}
-										},
-										"staging": {},
-										"compute": {
-											"coreCount": 8,
-											"computeType": "General"
-										},
-										"traceLevel": "Fine"
-									}
-								},
-								{
-									"name": "DF_report_daily_pricing_dim_product_table",
-									"type": "ExecuteDataFlow",
-									"dependsOn": [
-										{
-											"activity": "DF_report_daily_pricing_dim_variety_table",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataflow": {
-											"referenceName": "DF_report_daily_pricing_dim_product_table",
-											"type": "DataFlowReference",
-											"parameters": {
-												"dfl_prm_reporting_column_name": "'PRODUCT_NAME'",
-												"dfl_prm_reporting_schema_name": "'REPORTING'",
-												"dfl_prm_reporting_table_name": "'DIM_PRODUCT'",
-												"dfl_prm_reporting_table_id_column": "'PRODUCT_ID'"
-											},
-											"datasetParameters": {
-												"sourcereaddailypricingdata": {
-													"dst_prmt_landing_container_name": {
-														"value": "@pipeline().parameters.pln_prm_landing_container_name",
-														"type": "Expression"
-													},
-													"dst_prmt_landing_folder_name": {
-														"value": "@pipeline().parameters.pln_prm_landing_folder_name",
-														"type": "Expression"
-													},
-													"dst_prmt_landing_file_name": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												},
-												"selectdimlookup": {},
-												"selectmaxstateid": {},
-												"sinkdimensiontables": {}
-											}
-										},
-										"staging": {},
-										"compute": {
-											"coreCount": 8,
-											"computeType": "General"
-										},
-										"traceLevel": "Fine"
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"pln_prm_source_files_list": {
-						"type": "array"
-					},
-					"pln_prm_landing_container_name": {
-						"type": "string",
-						"defaultValue": "landing"
-					},
-					"pln_prm_landing_folder_name": {
-						"type": "string",
-						"defaultValue": "daily-pricing"
-					},
-					"pln_prm_landing_file_name": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Transform"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_State_table')]",
-				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_market_table')]",
-				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_variety_table')]",
-				"[concat(variables('factoryId'), '/dataflows/DF_report_daily_pricing_dim_product_table')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_trans_geolocation_json_file_lab5')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "DF_trans_geolocation_json_file_lab5",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_trans_geolocation_json_file_lab5",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"sourcereadgeolocationjsonfiles": {
-										"prm_dst_container_name": "pricingdatalake",
-										"prm_dst_folder_name": "bronze/geo-location",
-										"prm_dst_file_name": "Abhanpur.json"
-									},
-									"sinkmetadatafolder": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "labs"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_trans_geolocation_json_file_lab5')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TWTRG_daily_pricing')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "pipeline_daily_pricing",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"dst_source_file_date": "[parameters('TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Hour",
-					"interval": 24,
-					"startTime": "2023-01-01T04:56:00Z",
-					"endTime": "2023-01-16T04:56:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 2,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pipeline_daily_pricing')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_load_reporting_tables')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Metadata List Files",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "DS_ADLS_daily_pricing_lab4a",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"modifiedDatetimeStart": {
-									"value": "@pipeline().parameters.pln_prm_source_file_start_date",
-									"type": "Expression"
-								},
-								"modifiedDatetimeEnd": {
-									"value": "@pipeline().parameters.pln_prm_source_file_end_date",
-									"type": "Expression"
-								},
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "If Condition1",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata List Files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@empty(activity('Get Metadata List Files').output.childItems)",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "PL_load_reporting_dim_tables",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"policy": {
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "PL_load_reporting_dim_tables",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"pln_prm_source_files_list": {
-												"value": "@activity('Get Metadata List Files').output.childItems",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"pln_prm_source_file_start_date": {
-						"type": "string"
-					},
-					"pln_prm_source_file_end_date": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Transform"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_load_reporting_dim_tables')]"
 			]
 		}
 	]

@@ -39,6 +39,10 @@
 			"type": "string",
 			"defaultValue": "https://geocoding-api.open-meteo.com/"
 		},
+		"LS_HTTP_WEATHER_SOURCE_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://archive-api.open-meteo.com/"
+		},
 		"Ls_source_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://retailpricing.blob.core.windows.net"
@@ -98,6 +102,9 @@
 					"LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url": {
 						"value": "[parameters('LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url')]"
 					},
+					"LS_HTTP_WEATHER_SOURCE_properties_typeProperties_url": {
+						"value": "[parameters('LS_HTTP_WEATHER_SOURCE_properties_typeProperties_url')]"
+					},
 					"Ls_source_properties_typeProperties_url": {
 						"value": "[parameters('Ls_source_properties_typeProperties_url')]"
 					}
@@ -118,6 +125,26 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'GlobalPricingInsights-adf_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "GlobalPricingInsights-adf_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
 						"value": "[parameters('TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date')]"
@@ -125,7 +152,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'GlobalPricingInsights-adf_ArmTemplate_0')]"
+				"[resourceId('Microsoft.Resources/deployments', 'GlobalPricingInsights-adf_ArmTemplate_1')]"
 			]
 		}
 	]
