@@ -938,6 +938,11 @@
 					"referenceName": "LS_HTTP_GEOLOCATION_SOURCE",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"prm_dst_relative_url": {
+						"type": "string"
+					}
+				},
 				"folder": {
 					"name": "INGEST"
 				},
@@ -945,7 +950,11 @@
 				"type": "Json",
 				"typeProperties": {
 					"location": {
-						"type": "HttpServerLocation"
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "@dataset().prm_dst_relative_url",
+							"type": "Expression"
+						}
 					}
 				},
 				"schema": {}
