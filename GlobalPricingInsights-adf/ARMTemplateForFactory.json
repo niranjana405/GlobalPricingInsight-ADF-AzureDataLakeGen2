@@ -380,11 +380,11 @@
 													"type": "Expression"
 												},
 												"dst_prm_folder_name": {
-													"value": "@item().datalake_folder_name",
+													"value": "@concat(item().datalake_folder_name,'/',variables('pln_var_weather_month'))",
 													"type": "Expression"
 												},
 												"dst_prm_file_name": {
-													"value": "@item().market_name",
+													"value": "@concat(item().market_name,'.',pipeline().parameters.pln_prm_sink_output_format)",
 													"type": "Expression"
 												}
 											}
@@ -397,7 +397,14 @@
 					{
 						"name": "Set variable Start Date",
 						"type": "SetVariable",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Set variable Weather Month",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"secureOutput": false,
 							"secureInput": false
@@ -436,7 +443,7 @@
 						}
 					},
 					{
-						"name": "Set variable1",
+						"name": "Set variable Weather Month",
 						"type": "SetVariable",
 						"dependsOn": [],
 						"policy": {
@@ -444,7 +451,13 @@
 							"secureInput": false
 						},
 						"userProperties": [],
-						"typeProperties": {}
+						"typeProperties": {
+							"variableName": "pln_var_weather_month",
+							"value": {
+								"value": "@formatDateTime(pipeline().parameters.pln_prm_weather_start_date,'yyyyMM')",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -456,6 +469,10 @@
 					},
 					"pln_prm_weather_end_date": {
 						"type": "string"
+					},
+					"pln_prm_sink_output_format": {
+						"type": "string",
+						"defaultValue": "json"
 					}
 				},
 				"variables": {
@@ -463,6 +480,9 @@
 						"type": "String"
 					},
 					"pln_var_weather_end_date": {
+						"type": "String"
+					},
+					"pln_var_weather_month": {
 						"type": "String"
 					}
 				},
