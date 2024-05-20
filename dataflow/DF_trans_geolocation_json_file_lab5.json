@@ -80,11 +80,13 @@
 				"          generationtime_ms as double,",
 				"          results as (id as integer, name as string, latitude as double, longitude as double, elevation as double, feature_code as string, country_code as string, admin1_id as integer, timezone as string, country_id as integer, country as string, admin1 as string)[]",
 				"     ),",
+				"     partitionFileNames:['metadata/weatherdata-geocoordinates.json'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sinkmetadatafolder"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkmetadatafolder"
 			]
 		}
 	}

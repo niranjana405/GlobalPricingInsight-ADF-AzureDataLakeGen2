@@ -21,7 +21,8 @@
 						"datasetParameters": {
 							"sourcereadgeolocationjsonfiles": {
 								"prm_dst_container_name": "pricingdatalake",
-								"prm_dst_folder_name": "bronze/geo-location"
+								"prm_dst_folder_name": "bronze/geo-location",
+								"prm_dst_file_name": "Abhanpur.json"
 							}
 						}
 					},
