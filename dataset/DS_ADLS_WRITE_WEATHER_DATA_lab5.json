@@ -1,0 +1,73 @@
+{
+	"name": "DS_ADLS_WRITE_WEATHER_DATA_lab5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_GEOLOCATION_DATALAKE",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "labs"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "bronze",
+				"fileSystem": "pricingdatalake"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"generationtime_ms": {
+					"type": "number"
+				},
+				"results": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "integer"
+							},
+							"name": {
+								"type": "string"
+							},
+							"latitude": {
+								"type": "number"
+							},
+							"longitude": {
+								"type": "number"
+							},
+							"elevation": {
+								"type": "number"
+							},
+							"feature_code": {
+								"type": "string"
+							},
+							"country_code": {
+								"type": "string"
+							},
+							"admin1_id": {
+								"type": "integer"
+							},
+							"timezone": {
+								"type": "string"
+							},
+							"country_id": {
+								"type": "integer"
+							},
+							"country": {
+								"type": "string"
+							},
+							"admin1": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

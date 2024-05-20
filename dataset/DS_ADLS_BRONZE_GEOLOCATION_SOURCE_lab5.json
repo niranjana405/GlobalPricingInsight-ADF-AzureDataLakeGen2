@@ -1,0 +1,94 @@
+{
+	"name": "DS_ADLS_BRONZE_GEOLOCATION_SOURCE_lab5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_GEOLOCATION_DATALAKE",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"prm_dst_container_name": {
+				"type": "string"
+			},
+			"prm_dst_folder_name": {
+				"type": "string"
+			},
+			"prm_dst_file_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "labs"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().prm_dst_file_name",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().prm_dst_folder_name",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().prm_dst_container_name",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"results": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "integer"
+							},
+							"name": {
+								"type": "string"
+							},
+							"latitude": {
+								"type": "number"
+							},
+							"longitude": {
+								"type": "number"
+							},
+							"elevation": {
+								"type": "number"
+							},
+							"feature_code": {
+								"type": "string"
+							},
+							"country_code": {
+								"type": "string"
+							},
+							"admin1_id": {
+								"type": "integer"
+							},
+							"timezone": {
+								"type": "string"
+							},
+							"country_id": {
+								"type": "integer"
+							},
+							"country": {
+								"type": "string"
+							},
+							"admin1": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"generationtime_ms": {
+					"type": "number"
+				}
+			}
+		}
+	}
+}

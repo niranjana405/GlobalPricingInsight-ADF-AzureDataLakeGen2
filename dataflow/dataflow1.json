@@ -1,6 +1,9 @@
 {
 	"name": "dataflow1",
 	"properties": {
+		"folder": {
+			"name": "Working-labs"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
