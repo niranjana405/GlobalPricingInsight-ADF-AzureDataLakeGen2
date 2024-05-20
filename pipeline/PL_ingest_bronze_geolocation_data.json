@@ -1,0 +1,66 @@
+{
+	"name": "PL_ingest_bronze_geolocation_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data read geolocation data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_HTTP_SOURCE_GEOLOCATION_DATA",
+						"type": "DatasetReference",
+						"parameters": {
+							"prm_dst_relative_url": "v1/search?name=kovilpatti&count=10&language=en&format=json"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_ADLS_BRONZE_GEOLOCATION_DATA",
+						"type": "DatasetReference",
+						"parameters": {
+							"prm_dst_container_name": "pricingdatalake",
+							"prm_dst_folder_name": "bronze",
+							"prm_dst_file_name": "kovilpatti.json"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Ingest"
+		},
+		"annotations": []
+	}
+}

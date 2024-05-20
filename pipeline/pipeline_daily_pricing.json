@@ -169,6 +169,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "Ingest"
+		},
 		"annotations": [],
 		"lastPublishTime": "2024-05-15T04:33:03Z"
 	},
