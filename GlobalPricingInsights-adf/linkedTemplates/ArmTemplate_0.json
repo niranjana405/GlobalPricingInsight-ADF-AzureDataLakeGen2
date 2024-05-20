@@ -249,6 +249,105 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_BRONZE_GEOLOCATION_SOURCE_lab5')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_GEOLOCATION_DATALAKE",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"prm_dst_container_name": {
+						"type": "string"
+					},
+					"prm_dst_folder_name": {
+						"type": "string"
+					},
+					"prm_dst_file_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "labs"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().prm_dst_file_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().prm_dst_folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().prm_dst_container_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"results": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"name": {
+										"type": "string"
+									},
+									"latitude": {
+										"type": "number"
+									},
+									"longitude": {
+										"type": "number"
+									},
+									"elevation": {
+										"type": "number"
+									},
+									"feature_code": {
+										"type": "string"
+									},
+									"country_code": {
+										"type": "string"
+									},
+									"admin1_id": {
+										"type": "integer"
+									},
+									"timezone": {
+										"type": "string"
+									},
+									"country_id": {
+										"type": "integer"
+									},
+									"country": {
+										"type": "string"
+									},
+									"admin1": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"generationtime_ms": {
+							"type": "number"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_ADLS_READ_METADATA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -280,6 +379,84 @@
 						},
 						"DATALAKE_FOLDER_NAME": {
 							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_WRITE_WEATHER_DATA_lab5')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_GEOLOCATION_DATALAKE",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "labs"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "metadata/weatherdata-geocoordinates.json",
+						"fileSystem": "adf-metadata"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"generationtime_ms": {
+							"type": "number"
+						},
+						"results": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"name": {
+										"type": "string"
+									},
+									"latitude": {
+										"type": "number"
+									},
+									"longitude": {
+										"type": "number"
+									},
+									"elevation": {
+										"type": "number"
+									},
+									"feature_code": {
+										"type": "string"
+									},
+									"country_code": {
+										"type": "string"
+									},
+									"admin1_id": {
+										"type": "integer"
+									},
+									"timezone": {
+										"type": "string"
+									},
+									"country_id": {
+										"type": "integer"
+									},
+									"country": {
+										"type": "string"
+									},
+									"admin1": {
+										"type": "string"
+									}
+								}
+							}
 						}
 					}
 				}
@@ -788,92 +965,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_dim_state_source_lookup')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sink_dailypricing_lab1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "STATE_NAME",
-						"type": "varchar"
-					},
-					{
-						"name": "STATE_ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DWH_CREATED_DATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "DWH_UPDATED_DATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "reporting",
-					"table": "DIM_STATE"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sink_dailypricing_lab1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_sink_dailypricing_lab1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sink_dailypricing_lab1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "STATE_NAME",
-						"type": "varchar"
-					},
-					{
-						"name": "STATE_ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DWH_CREATED_DATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "DWH_UPDATED_DATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "reporting",
-					"table": "DIM_STATE"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sink_dailypricing_lab1')]"
 			]
 		}
 	]
