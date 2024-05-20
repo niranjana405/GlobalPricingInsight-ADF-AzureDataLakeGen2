@@ -94,10 +94,88 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Ingest"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_ingest_bronze_geolocation_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data read geolocation data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_HTTP_SOURCE_GEOLOCATION_DATA",
+								"type": "DatasetReference",
+								"parameters": {
+									"prm_dst_relative_url": "v1/search?name=kovilpatti&count=10&language=en&format=json"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_ADLS_BRONZE_GEOLOCATION_DATA",
+								"type": "DatasetReference",
+								"parameters": {
+									"prm_dst_container_name": "pricingdatalake",
+									"prm_dst_folder_name": "bronze",
+									"prm_dst_file_name": "kovilpatti.json"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Ingest"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_HTTP_SOURCE_GEOLOCATION_DATA')]",
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_BRONZE_GEOLOCATION_DATA')]"
 			]
 		},
 		{
@@ -827,6 +905,9 @@
 					"files_date": {
 						"type": "String"
 					}
+				},
+				"folder": {
+					"name": "Ingest"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-05-15T04:33:03Z"
