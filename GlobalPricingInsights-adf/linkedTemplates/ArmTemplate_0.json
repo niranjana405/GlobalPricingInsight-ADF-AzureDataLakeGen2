@@ -404,7 +404,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "metadata/weatherdata-geocoordinates.json",
+						"fileName": "weatherdata-geocoordinates.json",
 						"fileSystem": "adf-metadata"
 					}
 				},
