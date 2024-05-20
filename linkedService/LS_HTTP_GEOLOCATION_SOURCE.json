@@ -1,0 +1,12 @@
+{
+	"name": "LS_HTTP_GEOLOCATION_SOURCE",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://geocoding-api.open-meteo.com/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
