@@ -249,6 +249,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_READ_METADATA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_GEOLOCATION_DATALAKE",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "INGEST"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "metadata-geolocation-market-names.json",
+						"fileSystem": "adf-metadata"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"MARKET_NAME": {
+							"type": "string"
+						},
+						"DATALAKE_CONTAINER_NAME": {
+							"type": "string"
+						},
+						"DATALAKE_FOLDER_NAME": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_ADLS_daily_pricing_lab4a')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -795,49 +835,6 @@
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_sink_dailypricing_lab1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sink_dailypricing_lab1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "STATE_NAME",
-						"type": "varchar"
-					},
-					{
-						"name": "STATE_ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DWH_CREATED_DATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "DWH_UPDATED_DATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "reporting",
-					"table": "DIM_STATE"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sink_dailypricing_lab1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_source_Surrogate_key_state_id_dailypricing')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {

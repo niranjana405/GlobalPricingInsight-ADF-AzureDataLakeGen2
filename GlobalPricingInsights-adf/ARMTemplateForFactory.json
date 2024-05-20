@@ -163,10 +163,52 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Lookup Read Market names",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "DS_ADLS_READ_METADATA",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"pln_prm_rest_api_result_count": {
+						"type": "string",
+						"defaultValue": "10"
+					},
+					"pln_prm_rest_api_result_format": {
+						"type": "string",
+						"defaultValue": "json"
+					}
 				},
 				"folder": {
 					"name": "Ingest"
@@ -175,7 +217,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_HTTP_SOURCE_GEOLOCATION_DATA')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_BRONZE_GEOLOCATION_DATA')]"
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_BRONZE_GEOLOCATION_DATA')]",
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_READ_METADATA')]"
 			]
 		},
 		{
@@ -960,6 +1003,46 @@
 					}
 				},
 				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_READ_METADATA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_GEOLOCATION_DATALAKE",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "INGEST"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "metadata-geolocation-market-names.json",
+						"fileSystem": "adf-metadata"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"MARKET_NAME": {
+							"type": "string"
+						},
+						"DATALAKE_CONTAINER_NAME": {
+							"type": "string"
+						},
+						"DATALAKE_FOLDER_NAME": {
+							"type": "string"
+						}
+					}
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
