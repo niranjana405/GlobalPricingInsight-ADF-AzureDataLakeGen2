@@ -1,0 +1,20 @@
+{
+	"name": "DS_HTTP_SOURCE_GEOLOCATION_DATA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HTTP_GEOLOCATION_SOURCE",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "INGEST"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		},
+		"schema": {}
+	}
+}
