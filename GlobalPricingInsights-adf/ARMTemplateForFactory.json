@@ -325,7 +325,7 @@
 							"batchCount": 10,
 							"activities": [
 								{
-									"name": "Copy data Weather Details",
+									"name": "Copydata WeatherDetails",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
