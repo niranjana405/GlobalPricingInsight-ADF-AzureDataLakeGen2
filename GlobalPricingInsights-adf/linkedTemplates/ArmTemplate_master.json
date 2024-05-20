@@ -27,6 +27,10 @@
 			"type": "string",
 			"defaultValue": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
+		"LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://geocoding-api.open-meteo.com/"
+		},
 		"Ls_source_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://retailpricing.blob.core.windows.net"
@@ -76,6 +80,9 @@
 					},
 					"AzureDataLakeStorage2_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage2_properties_typeProperties_url')]"
+					},
+					"LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url": {
+						"value": "[parameters('LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url')]"
 					},
 					"Ls_source_properties_typeProperties_url": {
 						"value": "[parameters('Ls_source_properties_typeProperties_url')]"

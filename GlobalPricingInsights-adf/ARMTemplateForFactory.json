@@ -27,6 +27,10 @@
 			"type": "string",
 			"defaultValue": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
+		"LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://geocoding-api.open-meteo.com/"
+		},
 		"Ls_source_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://retailpricing.blob.core.windows.net"
@@ -926,6 +930,31 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_HTTP_SOURCE_GEOLOCATION_DATA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_HTTP_GEOLOCATION_SOURCE",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "INGEST"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_HTTP_GEOLOCATION_SOURCE')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_SINK_ASQL_DIM_MARKET')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1535,6 +1564,21 @@
 						"type": "SecureString",
 						"value": "[parameters('AzureDataLakeStorage2_accountKey')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_HTTP_GEOLOCATION_SOURCE')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
 				}
 			},
 			"dependsOn": []

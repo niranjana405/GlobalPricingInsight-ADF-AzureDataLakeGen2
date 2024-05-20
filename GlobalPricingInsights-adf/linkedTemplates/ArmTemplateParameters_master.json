@@ -20,6 +20,9 @@
 		"AzureDataLakeStorage2_properties_typeProperties_url": {
 			"value": "https://globalpricingdatagen2.dfs.core.windows.net/"
 		},
+		"LS_HTTP_GEOLOCATION_SOURCE_properties_typeProperties_url": {
+			"value": "https://geocoding-api.open-meteo.com/"
+		},
 		"Ls_source_properties_typeProperties_url": {
 			"value": "https://retailpricing.blob.core.windows.net"
 		},
