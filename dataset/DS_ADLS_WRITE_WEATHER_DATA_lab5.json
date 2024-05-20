@@ -13,8 +13,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "bronze",
-				"fileSystem": "pricingdatalake"
+				"fileName": "metadata/weatherdata-geocoordinates.json",
+				"fileSystem": "adf-metadata"
 			}
 		},
 		"schema": {
