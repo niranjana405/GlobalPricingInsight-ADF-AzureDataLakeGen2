@@ -1,0 +1,35 @@
+{
+	"name": "DS_ADLS_READ_METADATA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_GEOLOCATION_DATALAKE",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "INGEST"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "metadata-geolocation-market-names.json",
+				"fileSystem": "adf-metadata"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"MARKET_NAME": {
+					"type": "string"
+				},
+				"DATALAKE_CONTAINER_NAME": {
+					"type": "string"
+				},
+				"DATALAKE_FOLDER_NAME": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
