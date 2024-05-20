@@ -1,0 +1,29 @@
+{
+	"name": "DS_HTTP_SOURCE_WEATHER_DATA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HTTP_WEATHER_SOURCE",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"dst_prm_relative_url": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "INGEST"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().dst_prm_relative_url",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	}
+}

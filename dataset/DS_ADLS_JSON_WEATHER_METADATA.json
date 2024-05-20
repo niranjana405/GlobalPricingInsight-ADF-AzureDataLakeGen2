@@ -1,0 +1,48 @@
+{
+	"name": "DS_ADLS_JSON_WEATHER_METADATA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_GEOLOCATION_DATALAKE",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "weatherdata-geocoordinates.json",
+				"folderPath": "metadata",
+				"fileSystem": "adf-metadata"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"market_name": {
+					"type": "string"
+				},
+				"latitude": {
+					"type": "number"
+				},
+				"longitude": {
+					"type": "number"
+				},
+				"country_code": {
+					"type": "string"
+				},
+				"country": {
+					"type": "string"
+				},
+				"state_name": {
+					"type": "string"
+				},
+				"datalake_container_name": {
+					"type": "string"
+				},
+				"datalake_folder_name": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

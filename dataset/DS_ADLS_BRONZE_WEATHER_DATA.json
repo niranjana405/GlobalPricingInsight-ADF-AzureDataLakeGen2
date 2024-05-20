@@ -1,0 +1,31 @@
+{
+	"name": "DS_ADLS_BRONZE_WEATHER_DATA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_GEOLOCATION_DATALAKE",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"dst_prm_container_name": {
+				"type": "string"
+			},
+			"dst_prm_folder_name": {
+				"type": "string"
+			},
+			"dst_prm_file_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "INGEST"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation"
+			}
+		},
+		"schema": {}
+	}
+}

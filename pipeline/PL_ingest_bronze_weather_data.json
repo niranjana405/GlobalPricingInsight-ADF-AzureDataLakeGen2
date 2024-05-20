@@ -1,0 +1,195 @@
+{
+	"name": "PL_ingest_bronze_weather_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup Read weather metadata files",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Set variable Weather End date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_ADLS_JSON_WEATHER_METADATA",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach Iterate Weather Metadata",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup Read weather metadata files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Read weather metadata files').output.value",
+						"type": "Expression"
+					},
+					"batchCount": 10,
+					"activities": [
+						{
+							"name": "Copy data Weather Details",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "JsonSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "JsonReadSettings"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_HTTP_SOURCE_WEATHER_DATA",
+									"type": "DatasetReference",
+									"parameters": {
+										"dst_prm_relative_url": {
+											"value": "@concat('v1/archive?latitude=',item().latitude,'&longitude=',item().longitude,'&startdate=',variables('pln_var_weather_start_date'),'&enddate=',variables('pln_var_weather_end_date'),'&daily=weather-code,temperature_2m_max,temperature_2m_min,rain_sum&timezone=auto')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ADLS_BRONZE_WEATHER_DATA",
+									"type": "DatasetReference",
+									"parameters": {
+										"dst_prm_container_name": {
+											"value": "@item().datalake_container_name",
+											"type": "Expression"
+										},
+										"dst_prm_folder_name": {
+											"value": "@item().datalake_folder_name",
+											"type": "Expression"
+										},
+										"dst_prm_file_name": {
+											"value": "@item().market_name",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Set variable Start Date",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pln_var_weather_start_date",
+					"value": {
+						"value": "@formatDateTime(pipeline().parameters.pln_prm_weather_start_date,'yyyy-MM-dd')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable Weather End date",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable Start Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pln_var_weather_end_date",
+					"value": {
+						"value": "@formatDateTime(pipeline().parameters.pln_prm_weather_end_date,'yyyy-MM-dd')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pln_prm_weather_start_date": {
+				"type": "string"
+			},
+			"pln_prm_weather_end_date": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"pln_var_weather_start_date": {
+				"type": "String"
+			},
+			"pln_var_weather_end_date": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Ingest"
+		},
+		"annotations": []
+	}
+}
