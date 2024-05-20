@@ -1,0 +1,12 @@
+{
+	"name": "LS_HTTP_WEATHER_SOURCE",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://archive-api.open-meteo.com/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
