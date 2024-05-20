@@ -192,7 +192,8 @@
 								"value": "@activity('Lookup Read Market names').output.value",
 								"type": "Expression"
 							},
-							"isSequential": true,
+							"isSequential": false,
+							"batchCount": 10,
 							"activities": [
 								{
 									"name": "Copy data read geolocation data",
@@ -254,7 +255,7 @@
 													"type": "Expression"
 												},
 												"prm_dst_file_name": {
-													"value": "@item().MARKET_NAME",
+													"value": "@concat(item().MARKET_NAME,'.',pipeline().parameters.pln_prm_rest_api_result_format)",
 													"type": "Expression"
 												}
 											}
