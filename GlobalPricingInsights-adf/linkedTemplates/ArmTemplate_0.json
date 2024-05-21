@@ -282,9 +282,6 @@
 					},
 					"prm_dst_folder_name": {
 						"type": "string"
-					},
-					"prm_dst_file_name": {
-						"type": "string"
 					}
 				},
 				"folder": {
@@ -295,10 +292,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().prm_dst_file_name",
-							"type": "Expression"
-						},
 						"folderPath": {
 							"value": "@dataset().prm_dst_folder_name",
 							"type": "Expression"
@@ -615,7 +608,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_ADLS_SILVER_GEOLOCATION_DATA_SOURCE_copy1')]",
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_SILVER_GEOLOCATION_DATA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -629,9 +622,6 @@
 					},
 					"prm_dst_folder_name": {
 						"type": "string"
-					},
-					"prm_dst_file_name": {
-						"type": "string"
 					}
 				},
 				"folder": {
@@ -642,10 +632,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().prm_dst_file_name",
-							"type": "Expression"
-						},
 						"folderPath": {
 							"value": "@dataset().prm_dst_folder_name",
 							"type": "Expression"

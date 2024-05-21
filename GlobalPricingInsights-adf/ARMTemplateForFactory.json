@@ -1071,6 +1071,87 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_silver_geolocation_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_silver_geolocation_data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_silver_geolocation_data",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcegeolocationbronze": {
+										"prm_dst_container_name": {
+											"value": "@pipeline().parameters.pln_prm_container_name_bronze_source",
+											"type": "Expression"
+										},
+										"prm_dst_folder_name": {
+											"value": "@pipeline().parameters.pln_prm_folder_name_bronze_source",
+											"type": "Expression"
+										}
+									},
+									"sinkgeolocationsilver": {
+										"prm_dst_container_name": {
+											"value": "@pipeline().parameters.pln_prm_container_name_silver_sink",
+											"type": "Expression"
+										},
+										"prm_dst_folder_name": {
+											"value": "@pipeline().parameters.pln_prm_folder_name_silver_sink",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"pln_prm_container_name_bronze_source": {
+						"type": "string"
+					},
+					"pln_prm_folder_name_bronze_source": {
+						"type": "string"
+					},
+					"pln_prm_container_name_silver_sink": {
+						"type": "string"
+					},
+					"pln_prm_folder_name_silver_sink": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_silver_geolocation_data')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_trans_geolocation_json_file_lab5')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1373,9 +1454,6 @@
 					},
 					"prm_dst_folder_name": {
 						"type": "string"
-					},
-					"prm_dst_file_name": {
-						"type": "string"
 					}
 				},
 				"folder": {
@@ -1386,10 +1464,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().prm_dst_file_name",
-							"type": "Expression"
-						},
 						"folderPath": {
 							"value": "@dataset().prm_dst_folder_name",
 							"type": "Expression"
@@ -1706,7 +1780,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_ADLS_SILVER_GEOLOCATION_DATA_SOURCE_copy1')]",
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_SILVER_GEOLOCATION_DATA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1720,9 +1794,6 @@
 					},
 					"prm_dst_folder_name": {
 						"type": "string"
-					},
-					"prm_dst_file_name": {
-						"type": "string"
 					}
 				},
 				"folder": {
@@ -1733,10 +1804,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().prm_dst_file_name",
-							"type": "Expression"
-						},
 						"folderPath": {
 							"value": "@dataset().prm_dst_folder_name",
 							"type": "Expression"
@@ -3458,7 +3525,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "DS_ADLS_SILVER_GEOLOCATION_DATA_SOURCE_copy1",
+								"referenceName": "DS_ADLS_SILVER_GEOLOCATION_DATA",
 								"type": "DatasetReference"
 							},
 							"name": "sinkgeolocationsilver"
@@ -3535,7 +3602,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_ADLS_BRONZE_GEOLOCATION_DATA_SOURCE')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_SILVER_GEOLOCATION_DATA_SOURCE_copy1')]"
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_SILVER_GEOLOCATION_DATA')]"
 			]
 		},
 		{
