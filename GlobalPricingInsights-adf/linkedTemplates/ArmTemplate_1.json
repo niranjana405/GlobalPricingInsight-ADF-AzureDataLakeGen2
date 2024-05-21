@@ -882,10 +882,6 @@
 												"dst_prm_folder_name": {
 													"value": "@concat(item().datalake_folder_name,'/',variables('pln_var_weather_month'))",
 													"type": "Expression"
-												},
-												"dst_prm_file_name": {
-													"value": "@concat(item().market_name,'.',pipeline().parameters.pln_prm_sink_output_format)",
-													"type": "Expression"
 												}
 											}
 										}
@@ -1335,6 +1331,9 @@
 						}
 					],
 					"scriptLines": [
+						"parameters{",
+						"     dfl_prm_sin_weather_month_folder_name as string",
+						"}",
 						"source(output(",
 						"          latitude as double,",
 						"          longitude as double,",
@@ -1350,7 +1349,8 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     documentForm: 'documentPerLine') ~> sourcebronzeweatherdataread",
+						"     documentForm: 'documentPerLine',",
+						"     wildcardPaths:[($dfl_prm_sin_weather_month_folder_name + '*.json')]) ~> sourcebronzeweatherdataread",
 						"sourcebronzeweatherdataread foldDown(unroll(daily.time, daily.time),",
 						"     mapColumn(",
 						"          latitude,",
