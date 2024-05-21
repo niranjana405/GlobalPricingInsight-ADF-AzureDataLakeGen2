@@ -5,7 +5,14 @@
 			{
 				"name": "DF_Silver_Weather_data",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Set variable Weath Month",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -37,8 +44,50 @@
 					},
 					"traceLevel": "Fine"
 				}
+			},
+			{
+				"name": "Set variable Weath Month",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pln_var_weather_month",
+					"value": {
+						"value": "@formatDateTime(pipeline().parameters.pln_prm_weather_start_date,'yyyyMM')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"pln_prm_weather_start_date": {
+				"type": "string"
+			},
+			"pln_prm_weather_end_date": {
+				"type": "string"
+			},
+			"pln_prm_datalake_container_name": {
+				"type": "string",
+				"defaultValue": "pricingdatalake"
+			},
+			"pln_prm_datalake_folder_name_bronze": {
+				"type": "string",
+				"defaultValue": "bronze/WEATHER-DATA "
+			},
+			"pln_prm_datalake_folder_name_silver": {
+				"type": "string",
+				"defaultValue": "silver/WEATHER-DATA "
+			}
+		},
+		"variables": {
+			"pln_var_weather_month": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "Transform"
 		},
