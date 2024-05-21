@@ -38,6 +38,89 @@
 				}
 			}
 		},
-		"schema": {}
+		"schema": {
+			"type": "object",
+			"properties": {
+				"latitude": {
+					"type": "number"
+				},
+				"longitude": {
+					"type": "number"
+				},
+				"generationtime_ms": {
+					"type": "number"
+				},
+				"utc_offset_seconds": {
+					"type": "integer"
+				},
+				"timezone": {
+					"type": "string"
+				},
+				"timezone_abbreviation": {
+					"type": "string"
+				},
+				"elevation": {
+					"type": "number"
+				},
+				"daily_units": {
+					"type": "object",
+					"properties": {
+						"time": {
+							"type": "string"
+						},
+						"weather_code": {
+							"type": "string"
+						},
+						"temperature_2m_max": {
+							"type": "string"
+						},
+						"temperature_2m_min": {
+							"type": "string"
+						},
+						"rain_sum": {
+							"type": "string"
+						}
+					}
+				},
+				"daily": {
+					"type": "object",
+					"properties": {
+						"time": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"weather_code": {
+							"type": "array",
+							"items": {
+								"type": "null"
+							}
+						},
+						"temperature_2m_max": {
+							"type": "array",
+							"items": {
+								"type": "null"
+							}
+						},
+						"temperature_2m_min": {
+							"type": "array",
+							"items": {
+								"type": "null"
+							}
+						},
+						"rain_sum": {
+							"type": "array",
+							"items": {
+								"type": "null"
+							}
+						}
+					}
+				},
+				"Market_name": {
+					"type": "string"
+				}
+			}
+		}
 	}
 }

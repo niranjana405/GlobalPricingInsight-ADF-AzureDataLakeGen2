@@ -1,0 +1,36 @@
+{
+	"name": "DS_ADLS_SILVER_weather_DATA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_GEOLOCATION_DATALAKE",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"prm_dst_container_name": {
+				"type": "string"
+			},
+			"prm_dst_folder_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Transform"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().prm_dst_folder_name",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().prm_dst_container_name",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	}
+}
