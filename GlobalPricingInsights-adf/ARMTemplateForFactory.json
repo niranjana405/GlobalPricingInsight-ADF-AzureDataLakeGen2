@@ -325,7 +325,7 @@
 							"batchCount": 10,
 							"activities": [
 								{
-									"name": "Copydata WeatherDetails",
+									"name": "CopydataWeatherDetails",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -1463,7 +1463,19 @@
 				"type": "Json",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation"
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().dst_prm_file_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().dst_prm_folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().dst_prm_container_name",
+							"type": "Expression"
+						}
 					}
 				},
 				"schema": {}

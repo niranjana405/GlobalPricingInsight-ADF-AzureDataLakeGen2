@@ -692,7 +692,7 @@
 							"batchCount": 10,
 							"activities": [
 								{
-									"name": "Copydata WeatherDetails",
+									"name": "CopydataWeatherDetails",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
