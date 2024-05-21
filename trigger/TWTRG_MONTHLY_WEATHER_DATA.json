@@ -3,6 +3,17 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "PL_ingest_bronze_weather_data",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"pln_prm_weather_start_date": "@trigger().outputs.windowStartTime",
+				"pln_prm_weather_end_date": "@trigger().outputs.windowEndTime",
+				"pln_prm_sink_output_format": "json"
+			}
+		},
 		"type": "TumblingWindowTrigger",
 		"typeProperties": {
 			"frequency": "Month",
