@@ -69,6 +69,63 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_Silver_Weathe_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_Silver_Weather_data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Silver_Weather_data",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourcebronzeweatherdataread": {
+										"dst_prm_container_name": "pricingdatalake",
+										"dst_prm_folder_name": "bronze/WEATHER-DATA/202301/",
+										"dst_prm_file_name": "Agra.json"
+									},
+									"sink1": {
+										"dst_prm_container_name": "pricingdatalake",
+										"dst_prm_folder_name": "silver/WEATHER-DATA/202301/",
+										"dst_prm_file_name": "Agra.json"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Silver_Weather_data')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_dataflow1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2983,9 +3040,6 @@
 							"name": "flatten1"
 						},
 						{
-							"name": "flatten2"
-						},
-						{
 							"name": "flatten3"
 						},
 						{
@@ -3025,12 +3079,10 @@
 						"          timezone_abbreviation,",
 						"          elevation,",
 						"          daily_units_time = daily_units.time,",
-						"          daily_units_weather_code = daily_units.weather_code,",
 						"          daily_units_temperature_2m_max = daily_units.temperature_2m_max,",
 						"          daily_units_temperature_2m_min = daily_units.temperature_2m_min,",
 						"          daily_units_rain_sum = daily_units.rain_sum,",
 						"          daily_time = daily.time,",
-						"          daily_weather_code = daily.weather_code,",
 						"          daily_temperature_2m_max = daily.temperature_2m_max,",
 						"          daily_temperature_2m_min = daily.temperature_2m_min,",
 						"          daily_rain_sum = daily.rain_sum,",
@@ -3038,7 +3090,7 @@
 						"     ),",
 						"     skipDuplicateMapInputs: false,",
 						"     skipDuplicateMapOutputs: false) ~> flatten1",
-						"flatten1 foldDown(unroll(daily_weather_code, daily_weather_code),",
+						"flatten1 foldDown(unroll(daily_temperature_2m_max, daily_temperature_2m_max),",
 						"     mapColumn(",
 						"          latitude,",
 						"          longitude,",
@@ -3048,35 +3100,10 @@
 						"          timezone_abbreviation,",
 						"          elevation,",
 						"          daily_units_time,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
-						"          daily_temperature_2m_max,",
-						"          daily_temperature_2m_min,",
-						"          daily_rain_sum,",
-						"          Market_name",
-						"     ),",
-						"     skipDuplicateMapInputs: false,",
-						"     skipDuplicateMapOutputs: false) ~> flatten2",
-						"flatten2 foldDown(unroll(daily_temperature_2m_max, daily_temperature_2m_max),",
-						"     mapColumn(",
-						"          latitude,",
-						"          longitude,",
-						"          generationtime_ms,",
-						"          utc_offset_seconds,",
-						"          timezone,",
-						"          timezone_abbreviation,",
-						"          elevation,",
-						"          daily_units_time,",
-						"          daily_units_weather_code,",
-						"          daily_units_temperature_2m_max,",
-						"          daily_units_temperature_2m_min,",
-						"          daily_units_rain_sum,",
-						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -3094,12 +3121,10 @@
 						"          timezone_abbreviation,",
 						"          elevation,",
 						"          daily_units_time,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -3117,12 +3142,10 @@
 						"          timezone_abbreviation,",
 						"          elevation,",
 						"          daily_units_time,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -3133,12 +3156,10 @@
 						"flatten5 aggregate(groupBy(daily_units_time,",
 						"          latitude,",
 						"          longitude,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -3167,12 +3188,10 @@
 						"          daily_units_time,",
 						"          latitude,",
 						"          longitude,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -4229,21 +4248,6 @@
 				"[concat(variables('factoryId'), '/datasets/DS_source_Surrogate_key_state_id_dailypricing')]",
 				"[concat(variables('factoryId'), '/datasets/DS_sink_dailypricing_lab1')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_Silver_')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Transform"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
 		}
 	]
 }

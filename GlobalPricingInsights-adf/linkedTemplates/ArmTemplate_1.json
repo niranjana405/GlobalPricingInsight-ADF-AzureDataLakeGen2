@@ -13,38 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_HTTP_SOURCE_GEOLOCATION_DATA')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HTTP_GEOLOCATION_SOURCE",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"prm_dst_relative_url": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "INGEST"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": {
-							"value": "@dataset().prm_dst_relative_url",
-							"type": "Expression"
-						}
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DS_HTTP_SOURCE_WEATHER_DATA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -781,9 +749,7 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_HTTP_SOURCE_GEOLOCATION_DATA')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_ingest_bronze_weather_data')]",
@@ -1356,9 +1322,6 @@
 							"name": "flatten1"
 						},
 						{
-							"name": "flatten2"
-						},
-						{
 							"name": "flatten3"
 						},
 						{
@@ -1398,12 +1361,10 @@
 						"          timezone_abbreviation,",
 						"          elevation,",
 						"          daily_units_time = daily_units.time,",
-						"          daily_units_weather_code = daily_units.weather_code,",
 						"          daily_units_temperature_2m_max = daily_units.temperature_2m_max,",
 						"          daily_units_temperature_2m_min = daily_units.temperature_2m_min,",
 						"          daily_units_rain_sum = daily_units.rain_sum,",
 						"          daily_time = daily.time,",
-						"          daily_weather_code = daily.weather_code,",
 						"          daily_temperature_2m_max = daily.temperature_2m_max,",
 						"          daily_temperature_2m_min = daily.temperature_2m_min,",
 						"          daily_rain_sum = daily.rain_sum,",
@@ -1411,7 +1372,7 @@
 						"     ),",
 						"     skipDuplicateMapInputs: false,",
 						"     skipDuplicateMapOutputs: false) ~> flatten1",
-						"flatten1 foldDown(unroll(daily_weather_code, daily_weather_code),",
+						"flatten1 foldDown(unroll(daily_temperature_2m_max, daily_temperature_2m_max),",
 						"     mapColumn(",
 						"          latitude,",
 						"          longitude,",
@@ -1421,35 +1382,10 @@
 						"          timezone_abbreviation,",
 						"          elevation,",
 						"          daily_units_time,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
-						"          daily_temperature_2m_max,",
-						"          daily_temperature_2m_min,",
-						"          daily_rain_sum,",
-						"          Market_name",
-						"     ),",
-						"     skipDuplicateMapInputs: false,",
-						"     skipDuplicateMapOutputs: false) ~> flatten2",
-						"flatten2 foldDown(unroll(daily_temperature_2m_max, daily_temperature_2m_max),",
-						"     mapColumn(",
-						"          latitude,",
-						"          longitude,",
-						"          generationtime_ms,",
-						"          utc_offset_seconds,",
-						"          timezone,",
-						"          timezone_abbreviation,",
-						"          elevation,",
-						"          daily_units_time,",
-						"          daily_units_weather_code,",
-						"          daily_units_temperature_2m_max,",
-						"          daily_units_temperature_2m_min,",
-						"          daily_units_rain_sum,",
-						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -1467,12 +1403,10 @@
 						"          timezone_abbreviation,",
 						"          elevation,",
 						"          daily_units_time,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -1490,12 +1424,10 @@
 						"          timezone_abbreviation,",
 						"          elevation,",
 						"          daily_units_time,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -1506,12 +1438,10 @@
 						"flatten5 aggregate(groupBy(daily_units_time,",
 						"          latitude,",
 						"          longitude,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -1540,12 +1470,10 @@
 						"          daily_units_time,",
 						"          latitude,",
 						"          longitude,",
-						"          daily_units_weather_code,",
 						"          daily_units_temperature_2m_max,",
 						"          daily_units_temperature_2m_min,",
 						"          daily_units_rain_sum,",
 						"          daily_time,",
-						"          daily_weather_code,",
 						"          daily_temperature_2m_max,",
 						"          daily_temperature_2m_min,",
 						"          daily_rain_sum,",
@@ -1889,6 +1817,178 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_SOURCE_DAILYPRICING')]",
 				"[concat(variables('factoryId'), '/datasets/DS_SINK_ASQL_DIM_MARKET')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_report_daily_pricing_dim_product_table')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "TRANSFORM"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_SOURCE_DAILYPRICING",
+								"type": "DatasetReference"
+							},
+							"name": "sourcereaddailypricingdata"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_ASQL_REPORT_DIM_TABLES_SOURCE",
+								"type": "DatasetReference"
+							},
+							"name": "selectdimlookup"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_ASQL_REPORT_DIM_TABLES_SOURCE",
+								"type": "DatasetReference"
+							},
+							"name": "selectmaxstateid"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_SINK_ASQL_DIM_PRODUCT",
+								"type": "DatasetReference"
+							},
+							"name": "sinkdimensiontables"
+						}
+					],
+					"transformations": [
+						{
+							"name": "selectdimcolumnname"
+						},
+						{
+							"name": "aggregatefinduniquevalues"
+						},
+						{
+							"name": "lookupdimtables"
+						},
+						{
+							"name": "filternewsourcevalues"
+						},
+						{
+							"name": "joinmaxsurrogatekeyid"
+						},
+						{
+							"name": "selectmapdimcolumns"
+						},
+						{
+							"name": "surrogateKeygeneratenewid"
+						},
+						{
+							"name": "derivedColumnADDNEWCOLUMNS"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     dfl_prm_reporting_column_name as string,",
+						"     dfl_prm_reporting_schema_name as string,",
+						"     dfl_prm_reporting_table_name as string,",
+						"     dfl_prm_reporting_table_id_column as string",
+						"}",
+						"source(output(",
+						"          DATE_OF_PRICING as string,",
+						"          ROW_ID as string,",
+						"          STATE_NAME as string,",
+						"          MARKET_NAME as string,",
+						"          PRODUCTGROUP_NAME as string,",
+						"          PRODUCT_NAME as string,",
+						"          VARIETY as string,",
+						"          ORIGIN as string,",
+						"          ARRIVAL_IN_TONNES as string,",
+						"          MINIMUM_PRICE as string,",
+						"          MAXIMUM_PRICE as string,",
+						"          MODAL_PRICE as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> sourcereaddailypricingdata",
+						"source(output(",
+						"          lookup_target_colum_value as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: (concat('select ' ,$dfl_prm_reporting_column_name, ' as lookup_target_colum_value ', ' from ' ,$dfl_prm_reporting_schema_name, '.' ,$dfl_prm_reporting_table_name)),",
+						"     format: 'query') ~> selectdimlookup",
+						"source(output(",
+						"          MAX_SURROGATE_KEY_ID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: (concat('SELECT COALESCE(MAX(' , $dfl_prm_reporting_table_id_column , '),0) as MAX_SURROGATE_KEY_ID  FROM ' , $dfl_prm_reporting_schema_name , '.' , $dfl_prm_reporting_table_name)),",
+						"     format: 'query') ~> selectmaxstateid",
+						"sourcereaddailypricingdata select(mapColumn(",
+						"          SOURCE_FILE_DIM_COLUMN = PRODUCT_NAME,",
+						"          PRODUCTGROUP_NAME",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectdimcolumnname",
+						"selectdimcolumnname aggregate(groupBy(SOURCE_FILE_DIM_COLUMN,",
+						"          PRODUCTGROUP_NAME),",
+						"     count_source_file_dim_column = count(SOURCE_FILE_DIM_COLUMN)) ~> aggregatefinduniquevalues",
+						"aggregatefinduniquevalues, selectdimlookup lookup(SOURCE_FILE_DIM_COLUMN == lookup_target_colum_value,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> lookupdimtables",
+						"lookupdimtables filter(isNull(lookup_target_colum_value)) ~> filternewsourcevalues",
+						"filternewsourcevalues, selectmaxstateid join(!(isNull(SOURCE_FILE_DIM_COLUMN) && isNull(MAX_SURROGATE_KEY_ID)),",
+						"     joinType:'cross',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joinmaxsurrogatekeyid",
+						"joinmaxsurrogatekeyid select(mapColumn(",
+						"          SOURCE_FILE_DIM_COLUMN,",
+						"          PRODUCTGROUP_NAME,",
+						"          MAX_SURROGATE_KEY_ID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectmapdimcolumns",
+						"selectmapdimcolumns keyGenerate(output(SURROGATE_KEY_ID as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKeygeneratenewid",
+						"surrogateKeygeneratenewid derive(DWH_CREATED_DATE = currentDate(),",
+						"          DWH_UPDATED_DATE = currentDate(),",
+						"          NEW_SURROGATE_KEY = MAX_SURROGATE_KEY_ID + SURROGATE_KEY_ID) ~> derivedColumnADDNEWCOLUMNS",
+						"derivedColumnADDNEWCOLUMNS sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          PRODUCT_NAME as string,",
+						"          PRODUCTGROUP_NAME as string,",
+						"          PRODUCT_ID as integer,",
+						"          DWH_CREATED_DATE as timestamp,",
+						"          DWH_UPDATED_DATE as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          PRODUCT_NAME = SOURCE_FILE_DIM_COLUMN,",
+						"          PRODUCT_ID = NEW_SURROGATE_KEY,",
+						"          DWH_CREATED_DATE,",
+						"          DWH_UPDATED_DATE,",
+						"          PRODUCTGROUP_NAME",
+						"     )) ~> sinkdimensiontables"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SOURCE_DAILYPRICING')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SINK_ASQL_DIM_PRODUCT')]"
 			]
 		}
 	]
