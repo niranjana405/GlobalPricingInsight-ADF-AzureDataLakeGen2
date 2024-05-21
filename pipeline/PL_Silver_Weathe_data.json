@@ -1,0 +1,47 @@
+{
+	"name": "PL_Silver_Weathe_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "DF_Silver_Weather_data",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_Silver_Weather_data",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sourcebronzeweatherdataread": {
+								"dst_prm_container_name": "pricingdatalake",
+								"dst_prm_folder_name": "bronze/WEATHER-DATA/202301/",
+								"dst_prm_file_name": "Agra.json"
+							},
+							"sink1": {
+								"dst_prm_container_name": "pricingdatalake",
+								"dst_prm_folder_name": "silver/WEATHER-DATA/202301/",
+								"dst_prm_file_name": "Agra.json"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "Transform"
+		},
+		"annotations": []
+	}
+}
