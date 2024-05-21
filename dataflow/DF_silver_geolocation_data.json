@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DS_ADLS_SILVER_GEOLOCATION_DATA_SOURCE_copy1",
+						"referenceName": "DS_ADLS_SILVER_GEOLOCATION_DATA",
 						"type": "DatasetReference"
 					},
 					"name": "sinkgeolocationsilver"

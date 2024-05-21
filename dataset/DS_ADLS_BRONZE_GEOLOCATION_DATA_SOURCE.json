@@ -11,9 +11,6 @@
 			},
 			"prm_dst_folder_name": {
 				"type": "string"
-			},
-			"prm_dst_file_name": {
-				"type": "string"
 			}
 		},
 		"folder": {
@@ -24,10 +21,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().prm_dst_file_name",
-					"type": "Expression"
-				},
 				"folderPath": {
 					"value": "@dataset().prm_dst_folder_name",
 					"type": "Expression"

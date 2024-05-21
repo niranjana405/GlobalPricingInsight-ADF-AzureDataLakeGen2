@@ -1,5 +1,5 @@
 {
-	"name": "DS_ADLS_SILVER_GEOLOCATION_DATA_SOURCE_copy1",
+	"name": "DS_ADLS_SILVER_GEOLOCATION_DATA",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_GEOLOCATION_DATALAKE",
@@ -11,9 +11,6 @@
 			},
 			"prm_dst_folder_name": {
 				"type": "string"
-			},
-			"prm_dst_file_name": {
-				"type": "string"
 			}
 		},
 		"folder": {
@@ -24,10 +21,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().prm_dst_file_name",
-					"type": "Expression"
-				},
 				"folderPath": {
 					"value": "@dataset().prm_dst_folder_name",
 					"type": "Expression"
