@@ -74,6 +74,15 @@
 							"typeProperties": {
 								"source": {
 									"type": "JsonSource",
+									"additionalColumns": [
+										{
+											"name": "Market_name",
+											"value": {
+												"value": "@item().market_name",
+												"type": "Expression"
+											}
+										}
+									],
 									"storeSettings": {
 										"type": "HttpReadSettings",
 										"requestMethod": "GET"
