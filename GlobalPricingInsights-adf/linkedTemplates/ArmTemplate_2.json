@@ -29,6 +29,102 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DF_trans_geolocation_json_file_lab5')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Working-labs"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_ADLS_BRONZE_GEOLOCATION_SOURCE_lab5",
+								"type": "DatasetReference"
+							},
+							"name": "sourcereadgeolocationjsonfiles"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_ADLS_WRITE_WEATHER_DATA_lab5",
+								"type": "DatasetReference"
+							},
+							"name": "sinkmetadatafolder"
+						}
+					],
+					"transformations": [
+						{
+							"name": "flattencomplexdatatype"
+						},
+						{
+							"name": "selectmappingcolumns"
+						},
+						{
+							"name": "derivedColumnadditionalmetadataparams"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          results as (id as integer, name as string, latitude as double, longitude as double, elevation as double, feature_code as string, country_code as string, admin1_id as integer, timezone as string, country_id as integer, country as string, admin1 as string)[],",
+						"          generationtime_ms as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine',",
+						"     wildcardPaths:[('bronze/geo-location/*.json')]) ~> sourcereadgeolocationjsonfiles",
+						"sourcereadgeolocationjsonfiles foldDown(unroll(results, results),",
+						"     mapColumn(",
+						"          id = results.id,",
+						"          name = results.name,",
+						"          latitude = results.latitude,",
+						"          longitude = results.longitude,",
+						"          elevation = results.elevation,",
+						"          feature_code = results.feature_code,",
+						"          country_code = results.country_code,",
+						"          admin1_id = results.admin1_id,",
+						"          timezone = results.timezone,",
+						"          country_id = results.country_id,",
+						"          country = results.country,",
+						"          admin1 = results.admin1",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flattencomplexdatatype",
+						"flattencomplexdatatype select(mapColumn(",
+						"          market_name = name,",
+						"          latitude,",
+						"          longitude,",
+						"          country_code,",
+						"          country,",
+						"          state_name = admin1",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectmappingcolumns",
+						"selectmappingcolumns derive(datalake_container_name = 'pricingdatalake',",
+						"          datalake_folder_name = 'bronze/WEATHER-DATA') ~> derivedColumnadditionalmetadataparams",
+						"derivedColumnadditionalmetadataparams sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          generationtime_ms as double,",
+						"          results as (id as integer, name as string, latitude as double, longitude as double, elevation as double, feature_code as string, country_code as string, admin1_id as integer, timezone as string, country_id as integer, country as string, admin1 as string)[]",
+						"     ),",
+						"     partitionFileNames:['weatherdata-geocoordinates.json'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sinkmetadatafolder"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -558,7 +654,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_trans_geolocation_json_file_lab5')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/TWTRG_daily_pricing')]",

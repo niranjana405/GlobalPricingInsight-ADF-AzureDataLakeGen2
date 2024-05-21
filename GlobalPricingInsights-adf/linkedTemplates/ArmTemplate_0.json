@@ -309,7 +309,67 @@
 						}
 					}
 				},
-				"schema": {}
+				"schema": {
+					"type": "object",
+					"properties": {
+						"results": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"name": {
+										"type": "string"
+									},
+									"latitude": {
+										"type": "number"
+									},
+									"longitude": {
+										"type": "number"
+									},
+									"elevation": {
+										"type": "number"
+									},
+									"feature_code": {
+										"type": "string"
+									},
+									"country_code": {
+										"type": "string"
+									},
+									"admin1_id": {
+										"type": "integer"
+									},
+									"admin2_id": {
+										"type": "integer"
+									},
+									"timezone": {
+										"type": "string"
+									},
+									"population": {
+										"type": "integer"
+									},
+									"country_id": {
+										"type": "integer"
+									},
+									"country": {
+										"type": "string"
+									},
+									"admin1": {
+										"type": "string"
+									},
+									"admin2": {
+										"type": "string"
+									}
+								}
+							}
+						},
+						"generationtime_ms": {
+							"type": "number"
+						}
+					}
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
