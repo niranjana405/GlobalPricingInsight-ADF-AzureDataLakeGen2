@@ -7,10 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "GlobalPricingInsights-adf"
 		},
-		"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
-		},
 		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
@@ -22,6 +18,10 @@
 		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format": {
 			"type": "string",
 			"defaultValue": "json"
+		},
+		"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
 		}
 	},
 	"variables": {
@@ -349,38 +349,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TWTRG_daily_pricing')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "pipeline_daily_pricing",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"dst_source_file_date": "[parameters('TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Hour",
-					"interval": 24,
-					"startTime": "2023-01-01T04:56:00Z",
-					"endTime": "2023-01-16T04:56:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 2,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/TWTRG_MONTHLY_WEATHER_DATA')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -406,6 +374,38 @@
 					"endTime": "2023-12-31T03:29:00Z",
 					"delay": "00:00:00",
 					"maxConcurrency": 1,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TWTRG_daily_pricing')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "pipeline_daily_pricing",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"dst_source_file_date": "[parameters('TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Hour",
+					"interval": 24,
+					"startTime": "2023-01-01T04:56:00Z",
+					"endTime": "2023-01-16T04:56:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 2,
 					"retryPolicy": {
 						"intervalInSeconds": 30
 					},

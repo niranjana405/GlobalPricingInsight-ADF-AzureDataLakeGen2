@@ -47,10 +47,6 @@
 			"type": "string",
 			"defaultValue": "https://retailpricing.blob.core.windows.net"
 		},
-		"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
-		},
 		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
@@ -62,6 +58,10 @@
 		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format": {
 			"type": "string",
 			"defaultValue": "json"
+		},
+		"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
 		},
 		"containerUri": {
 			"type": "string",
@@ -158,9 +158,6 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
-						"value": "[parameters('TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date')]"
-					},
 					"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date": {
 						"value": "[parameters('TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date')]"
 					},
@@ -169,6 +166,9 @@
 					},
 					"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format": {
 						"value": "[parameters('TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format')]"
+					},
+					"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
+						"value": "[parameters('TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date')]"
 					}
 				}
 			},
