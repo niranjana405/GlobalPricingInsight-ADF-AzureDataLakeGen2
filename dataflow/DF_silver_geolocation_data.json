@@ -1,0 +1,96 @@
+{
+	"name": "DF_silver_geolocation_data",
+	"properties": {
+		"folder": {
+			"name": "TRANSFORM"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS_BRONZE_GEOLOCATION_DATA_SOURCE",
+						"type": "DatasetReference"
+					},
+					"name": "sourcegeolocationbronze"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS_SILVER_GEOLOCATION_DATA_SOURCE_copy1",
+						"type": "DatasetReference"
+					},
+					"name": "sinkgeolocationsilver"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flattengeolocationdata"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "selectsilvernames"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          results as (id as integer, name as string, latitude as double, longitude as double, elevation as double, feature_code as string, country_code as string, admin1_id as integer, admin2_id as integer, timezone as string, population as integer, country_id as integer, country as string, admin1 as string, admin2 as string)[],",
+				"          generationtime_ms as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:[('bronze/geo-location/*.json')]) ~> sourcegeolocationbronze",
+				"sourcegeolocationbronze foldDown(unroll(results, results),",
+				"     mapColumn(",
+				"          id = results.id,",
+				"          name = results.name,",
+				"          latitude = results.latitude,",
+				"          longitude = results.longitude,",
+				"          elevation = results.elevation,",
+				"          feature_code = results.feature_code,",
+				"          country_code = results.country_code,",
+				"          admin1_id = results.admin1_id,",
+				"          admin2_id = results.admin2_id,",
+				"          timezone = results.timezone,",
+				"          population = results.population,",
+				"          country_id = results.country_id,",
+				"          country = results.country,",
+				"          admin1 = results.admin1,",
+				"          admin2 = results.admin2",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flattengeolocationdata",
+				"flattengeolocationdata filter(country=='India' && !(isNull(population))) ~> filter1",
+				"filter1 select(mapColumn(",
+				"          geolocation_id = id,",
+				"          market_name = name,",
+				"          latitude,",
+				"          longitude,",
+				"          elevation,",
+				"          feature_code,",
+				"          country_code,",
+				"          administration_id = admin1_id,",
+				"          timezone,",
+				"          population,",
+				"          country_id,",
+				"          country_name = country,",
+				"          state_division_name = admin1",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectsilvernames",
+				"selectsilvernames sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkgeolocationsilver"
+			]
+		}
+	}
+}
