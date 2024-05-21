@@ -1,0 +1,31 @@
+{
+	"name": "trigger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "PL_ingest_bronze_weather_data",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"pln_prm_weather_start_date": "@trigger().outputs.windowStartTime",
+				"pln_prm_weather_end_date": "@trigger().outputs.windowEndTime",
+				"pln_prm_sink_output_format": "json"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Month",
+			"interval": 1,
+			"startTime": "2023-01-01T04:13:00Z",
+			"endTime": "2023-12-31T04:13:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 1,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}
