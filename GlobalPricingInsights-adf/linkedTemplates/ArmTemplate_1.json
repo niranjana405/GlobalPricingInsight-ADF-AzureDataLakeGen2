@@ -1902,7 +1902,7 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> selectmappingcolumns",
 						"selectmappingcolumns derive(datalake_container_name = 'pricingdatalake',",
-						"          datalake_folder_name = 'bronze/geo-location') ~> derivedColumnadditionalmetadataparams",
+						"          datalake_folder_name = 'bronze/WEATHER-DATA') ~> derivedColumnadditionalmetadataparams",
 						"derivedColumnadditionalmetadataparams sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
