@@ -51,6 +51,18 @@
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
 		},
+		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_end_date": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndTime"
+		},
+		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format": {
+			"type": "string",
+			"defaultValue": "json"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -148,6 +160,15 @@
 					},
 					"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
 						"value": "[parameters('TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date')]"
+					},
+					"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date": {
+						"value": "[parameters('TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date')]"
+					},
+					"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_end_date": {
+						"value": "[parameters('TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_end_date')]"
+					},
+					"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format": {
+						"value": "[parameters('TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format')]"
 					}
 				}
 			},
