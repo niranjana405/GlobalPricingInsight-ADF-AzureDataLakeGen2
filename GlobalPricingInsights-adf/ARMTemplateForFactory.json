@@ -47,21 +47,21 @@
 			"type": "string",
 			"defaultValue": "https://retailpricing.blob.core.windows.net"
 		},
-		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowStartTime"
-		},
-		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_end_date": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndTime"
-		},
-		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format": {
-			"type": "string",
-			"defaultValue": "json"
-		},
 		"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"trigger1_properties_pipeline_parameters_pln_prm_weather_start_date": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"trigger1_properties_pipeline_parameters_pln_prm_weather_end_date": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndTime"
+		},
+		"trigger1_properties_pipeline_parameters_pln_prm_sink_output_format": {
+			"type": "string",
+			"defaultValue": "json"
 		}
 	},
 	"variables": {
@@ -2534,42 +2534,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TWTRG_MONTHLY_WEATHER_DATA')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "PL_ingest_bronze_weather_data",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"pln_prm_weather_start_date": "[parameters('TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date')]",
-						"pln_prm_weather_end_date": "[parameters('TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_end_date')]",
-						"pln_prm_sink_output_format": "[parameters('TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Month",
-					"interval": 1,
-					"startTime": "2023-01-01T03:29:00Z",
-					"endTime": "2023-12-31T00:00:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 1,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_ingest_bronze_weather_data')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/TWTRG_daily_pricing')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -3543,6 +3507,42 @@
 				"[concat(variables('factoryId'), '/datasets/DS_dim_state_source_lookup')]",
 				"[concat(variables('factoryId'), '/datasets/DS_source_Surrogate_key_state_id_dailypricing')]",
 				"[concat(variables('factoryId'), '/datasets/DS_sink_dailypricing_lab1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "PL_ingest_bronze_weather_data",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"pln_prm_weather_start_date": "[parameters('trigger1_properties_pipeline_parameters_pln_prm_weather_start_date')]",
+						"pln_prm_weather_end_date": "[parameters('trigger1_properties_pipeline_parameters_pln_prm_weather_end_date')]",
+						"pln_prm_sink_output_format": "[parameters('trigger1_properties_pipeline_parameters_pln_prm_sink_output_format')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Month",
+					"interval": 1,
+					"startTime": "2023-01-01T04:13:00Z",
+					"endTime": "2023-12-31T04:13:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 1,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_ingest_bronze_weather_data')]"
 			]
 		}
 	]

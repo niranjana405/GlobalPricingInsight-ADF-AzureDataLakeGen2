@@ -35,17 +35,17 @@
 		"Ls_source_properties_typeProperties_url": {
 			"value": "https://retailpricing.blob.core.windows.net"
 		},
-		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_start_date": {
-			"value": "@trigger().outputs.windowStartTime"
-		},
-		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_weather_end_date": {
-			"value": "@trigger().outputs.windowEndTime"
-		},
-		"TWTRG_MONTHLY_WEATHER_DATA_properties_pipeline_parameters_pln_prm_sink_output_format": {
-			"value": "json"
-		},
 		"TWTRG_daily_pricing_properties_pipeline_parameters_dst_source_file_date": {
 			"value": "@trigger().outputs.windowStartTime"
+		},
+		"trigger1_properties_pipeline_parameters_pln_prm_weather_start_date": {
+			"value": "@trigger().outputs.windowStartTime"
+		},
+		"trigger1_properties_pipeline_parameters_pln_prm_weather_end_date": {
+			"value": "@trigger().outputs.windowEndTime"
+		},
+		"trigger1_properties_pipeline_parameters_pln_prm_sink_output_format": {
+			"value": "json"
 		}
 	}
 }
