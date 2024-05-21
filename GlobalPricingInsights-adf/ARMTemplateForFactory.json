@@ -1681,7 +1681,90 @@
 						}
 					}
 				},
-				"schema": {}
+				"schema": {
+					"type": "object",
+					"properties": {
+						"latitude": {
+							"type": "number"
+						},
+						"longitude": {
+							"type": "number"
+						},
+						"generationtime_ms": {
+							"type": "number"
+						},
+						"utc_offset_seconds": {
+							"type": "integer"
+						},
+						"timezone": {
+							"type": "string"
+						},
+						"timezone_abbreviation": {
+							"type": "string"
+						},
+						"elevation": {
+							"type": "number"
+						},
+						"daily_units": {
+							"type": "object",
+							"properties": {
+								"time": {
+									"type": "string"
+								},
+								"weather_code": {
+									"type": "string"
+								},
+								"temperature_2m_max": {
+									"type": "string"
+								},
+								"temperature_2m_min": {
+									"type": "string"
+								},
+								"rain_sum": {
+									"type": "string"
+								}
+							}
+						},
+						"daily": {
+							"type": "object",
+							"properties": {
+								"time": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"weather_code": {
+									"type": "array",
+									"items": {
+										"type": "null"
+									}
+								},
+								"temperature_2m_max": {
+									"type": "array",
+									"items": {
+										"type": "null"
+									}
+								},
+								"temperature_2m_min": {
+									"type": "array",
+									"items": {
+										"type": "null"
+									}
+								},
+								"rain_sum": {
+									"type": "array",
+									"items": {
+										"type": "null"
+									}
+								}
+							}
+						},
+						"Market_name": {
+							"type": "string"
+						}
+					}
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
@@ -1781,6 +1864,47 @@
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_ADLS_SILVER_GEOLOCATION_DATA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_GEOLOCATION_DATALAKE",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"prm_dst_container_name": {
+						"type": "string"
+					},
+					"prm_dst_folder_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().prm_dst_folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().prm_dst_container_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_SILVER_weather_DATA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2827,6 +2951,242 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DF_Silver_Weather_data')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "TRANSFORM"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_ADLS_BRONZE_WEATHER_DATA",
+								"type": "DatasetReference"
+							},
+							"name": "sourcebronzeweatherdataread"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_ADLS_BRONZE_WEATHER_DATA",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "flatten1"
+						},
+						{
+							"name": "flatten2"
+						},
+						{
+							"name": "flatten3"
+						},
+						{
+							"name": "flatten4"
+						},
+						{
+							"name": "flatten5"
+						},
+						{
+							"name": "aggregateuniquerecords"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          latitude as double,",
+						"          longitude as double,",
+						"          generationtime_ms as double,",
+						"          utc_offset_seconds as integer,",
+						"          timezone as string,",
+						"          timezone_abbreviation as string,",
+						"          elevation as double,",
+						"          daily_units as (time as string, weather_code as string, temperature_2m_max as string, temperature_2m_min as string, rain_sum as string),",
+						"          daily as (time as string[], weather_code as string[], temperature_2m_max as string[], temperature_2m_min as string[], rain_sum as string[]),",
+						"          Market_name as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> sourcebronzeweatherdataread",
+						"sourcebronzeweatherdataread foldDown(unroll(daily.time, daily.time),",
+						"     mapColumn(",
+						"          latitude,",
+						"          longitude,",
+						"          generationtime_ms,",
+						"          utc_offset_seconds,",
+						"          timezone,",
+						"          timezone_abbreviation,",
+						"          elevation,",
+						"          daily_units_time = daily_units.time,",
+						"          daily_units_weather_code = daily_units.weather_code,",
+						"          daily_units_temperature_2m_max = daily_units.temperature_2m_max,",
+						"          daily_units_temperature_2m_min = daily_units.temperature_2m_min,",
+						"          daily_units_rain_sum = daily_units.rain_sum,",
+						"          daily_time = daily.time,",
+						"          daily_weather_code = daily.weather_code,",
+						"          daily_temperature_2m_max = daily.temperature_2m_max,",
+						"          daily_temperature_2m_min = daily.temperature_2m_min,",
+						"          daily_rain_sum = daily.rain_sum,",
+						"          Market_name",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten1",
+						"flatten1 foldDown(unroll(daily_weather_code, daily_weather_code),",
+						"     mapColumn(",
+						"          latitude,",
+						"          longitude,",
+						"          generationtime_ms,",
+						"          utc_offset_seconds,",
+						"          timezone,",
+						"          timezone_abbreviation,",
+						"          elevation,",
+						"          daily_units_time,",
+						"          daily_units_weather_code,",
+						"          daily_units_temperature_2m_max,",
+						"          daily_units_temperature_2m_min,",
+						"          daily_units_rain_sum,",
+						"          daily_time,",
+						"          daily_weather_code,",
+						"          daily_temperature_2m_max,",
+						"          daily_temperature_2m_min,",
+						"          daily_rain_sum,",
+						"          Market_name",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten2",
+						"flatten2 foldDown(unroll(daily_temperature_2m_max, daily_temperature_2m_max),",
+						"     mapColumn(",
+						"          latitude,",
+						"          longitude,",
+						"          generationtime_ms,",
+						"          utc_offset_seconds,",
+						"          timezone,",
+						"          timezone_abbreviation,",
+						"          elevation,",
+						"          daily_units_time,",
+						"          daily_units_weather_code,",
+						"          daily_units_temperature_2m_max,",
+						"          daily_units_temperature_2m_min,",
+						"          daily_units_rain_sum,",
+						"          daily_time,",
+						"          daily_weather_code,",
+						"          daily_temperature_2m_max,",
+						"          daily_temperature_2m_min,",
+						"          daily_rain_sum,",
+						"          Market_name",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten3",
+						"flatten3 foldDown(unroll(daily_temperature_2m_min, daily_temperature_2m_min),",
+						"     mapColumn(",
+						"          latitude,",
+						"          longitude,",
+						"          generationtime_ms,",
+						"          utc_offset_seconds,",
+						"          timezone,",
+						"          timezone_abbreviation,",
+						"          elevation,",
+						"          daily_units_time,",
+						"          daily_units_weather_code,",
+						"          daily_units_temperature_2m_max,",
+						"          daily_units_temperature_2m_min,",
+						"          daily_units_rain_sum,",
+						"          daily_time,",
+						"          daily_weather_code,",
+						"          daily_temperature_2m_max,",
+						"          daily_temperature_2m_min,",
+						"          daily_rain_sum,",
+						"          Market_name",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten4",
+						"flatten4 foldDown(unroll(daily_rain_sum, daily_rain_sum),",
+						"     mapColumn(",
+						"          latitude,",
+						"          longitude,",
+						"          generationtime_ms,",
+						"          utc_offset_seconds,",
+						"          timezone,",
+						"          timezone_abbreviation,",
+						"          elevation,",
+						"          daily_units_time,",
+						"          daily_units_weather_code,",
+						"          daily_units_temperature_2m_max,",
+						"          daily_units_temperature_2m_min,",
+						"          daily_units_rain_sum,",
+						"          daily_time,",
+						"          daily_weather_code,",
+						"          daily_temperature_2m_max,",
+						"          daily_temperature_2m_min,",
+						"          daily_rain_sum,",
+						"          Market_name",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten5",
+						"flatten5 aggregate(groupBy(daily_units_time,",
+						"          latitude,",
+						"          longitude,",
+						"          daily_units_weather_code,",
+						"          daily_units_temperature_2m_max,",
+						"          daily_units_temperature_2m_min,",
+						"          daily_units_rain_sum,",
+						"          daily_time,",
+						"          daily_weather_code,",
+						"          daily_temperature_2m_max,",
+						"          daily_temperature_2m_min,",
+						"          daily_rain_sum,",
+						"          Market_name),",
+						"     Count_Market_name = count(Market_name)) ~> aggregateuniquerecords",
+						"aggregateuniquerecords sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          latitude as double,",
+						"          longitude as double,",
+						"          generationtime_ms as double,",
+						"          utc_offset_seconds as integer,",
+						"          timezone as string,",
+						"          timezone_abbreviation as string,",
+						"          elevation as double,",
+						"          daily_units as (time as string, weather_code as string, temperature_2m_max as string, temperature_2m_min as string, rain_sum as string),",
+						"          daily as (time as string[], weather_code as string[], temperature_2m_max as string[], temperature_2m_min as string[], rain_sum as string[]),",
+						"          Market_name as string",
+						"     ),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          daily_units_time,",
+						"          latitude,",
+						"          longitude,",
+						"          daily_units_weather_code,",
+						"          daily_units_temperature_2m_max,",
+						"          daily_units_temperature_2m_min,",
+						"          daily_units_rain_sum,",
+						"          daily_time,",
+						"          daily_weather_code,",
+						"          daily_temperature_2m_max,",
+						"          daily_temperature_2m_min,",
+						"          daily_rain_sum,",
+						"          Market_name,",
+						"          count_market_name = Count_Market_name",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_BRONZE_WEATHER_DATA')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DF_report_daily_pricing_dim_State_table')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -3869,6 +4229,21 @@
 				"[concat(variables('factoryId'), '/datasets/DS_source_Surrogate_key_state_id_dailypricing')]",
 				"[concat(variables('factoryId'), '/datasets/DS_sink_dailypricing_lab1')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Silver_')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		}
 	]
 }

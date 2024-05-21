@@ -220,6 +220,21 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_Silver_We')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_ADLS_BRONZE_GEOLOCATION_DATA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -509,7 +524,90 @@
 						}
 					}
 				},
-				"schema": {}
+				"schema": {
+					"type": "object",
+					"properties": {
+						"latitude": {
+							"type": "number"
+						},
+						"longitude": {
+							"type": "number"
+						},
+						"generationtime_ms": {
+							"type": "number"
+						},
+						"utc_offset_seconds": {
+							"type": "integer"
+						},
+						"timezone": {
+							"type": "string"
+						},
+						"timezone_abbreviation": {
+							"type": "string"
+						},
+						"elevation": {
+							"type": "number"
+						},
+						"daily_units": {
+							"type": "object",
+							"properties": {
+								"time": {
+									"type": "string"
+								},
+								"weather_code": {
+									"type": "string"
+								},
+								"temperature_2m_max": {
+									"type": "string"
+								},
+								"temperature_2m_min": {
+									"type": "string"
+								},
+								"rain_sum": {
+									"type": "string"
+								}
+							}
+						},
+						"daily": {
+							"type": "object",
+							"properties": {
+								"time": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"weather_code": {
+									"type": "array",
+									"items": {
+										"type": "null"
+									}
+								},
+								"temperature_2m_max": {
+									"type": "array",
+									"items": {
+										"type": "null"
+									}
+								},
+								"temperature_2m_min": {
+									"type": "array",
+									"items": {
+										"type": "null"
+									}
+								},
+								"rain_sum": {
+									"type": "array",
+									"items": {
+										"type": "null"
+									}
+								}
+							}
+						},
+						"Market_name": {
+							"type": "string"
+						}
+					}
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
@@ -609,6 +707,47 @@
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_ADLS_SILVER_GEOLOCATION_DATA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_GEOLOCATION_DATALAKE",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"prm_dst_container_name": {
+						"type": "string"
+					},
+					"prm_dst_folder_name": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Transform"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().prm_dst_folder_name",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().prm_dst_container_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_GEOLOCATION_DATALAKE')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_SILVER_weather_DATA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -825,74 +964,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_sink_dailypricing_lab1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_HTTP_SOURCE_GEOLOCATION_DATA')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HTTP_GEOLOCATION_SOURCE",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"prm_dst_relative_url": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "INGEST"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": {
-							"value": "@dataset().prm_dst_relative_url",
-							"type": "Expression"
-						}
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_HTTP_GEOLOCATION_SOURCE')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_HTTP_SOURCE_WEATHER_DATA')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_HTTP_WEATHER_SOURCE",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"dst_prm_relative_url": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "INGEST"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": {
-							"value": "@dataset().dst_prm_relative_url",
-							"type": "Expression"
-						}
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_HTTP_WEATHER_SOURCE')]"
 			]
 		}
 	]
