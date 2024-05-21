@@ -1,0 +1,28 @@
+{
+	"name": "DF_Silver_Weather_data",
+	"properties": {
+		"folder": {
+			"name": "TRANSFORM"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS_BRONZE_WEATHER_DATA",
+						"type": "DatasetReference"
+					},
+					"name": "sourcebronzeweatherdataread"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> sourcebronzeweatherdataread"
+			]
+		}
+	}
+}
