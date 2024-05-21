@@ -29,9 +29,6 @@
 					"name": "flatten1"
 				},
 				{
-					"name": "flatten2"
-				},
-				{
 					"name": "flatten3"
 				},
 				{
@@ -82,28 +79,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
-				"flatten1 foldDown(unroll(daily_weather_code, daily_weather_code),",
-				"     mapColumn(",
-				"          latitude,",
-				"          longitude,",
-				"          generationtime_ms,",
-				"          utc_offset_seconds,",
-				"          timezone,",
-				"          timezone_abbreviation,",
-				"          elevation,",
-				"          daily_units_time,",
-				"          daily_units_temperature_2m_max,",
-				"          daily_units_temperature_2m_min,",
-				"          daily_units_rain_sum,",
-				"          daily_time,",
-				"          daily_temperature_2m_max,",
-				"          daily_temperature_2m_min,",
-				"          daily_rain_sum,",
-				"          Market_name",
-				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> flatten2",
-				"flatten2 foldDown(unroll(daily_temperature_2m_max, daily_temperature_2m_max),",
+				"flatten1 foldDown(unroll(daily_temperature_2m_max, daily_temperature_2m_max),",
 				"     mapColumn(",
 				"          latitude,",
 				"          longitude,",
