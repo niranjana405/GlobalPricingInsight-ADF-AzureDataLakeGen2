@@ -27,14 +27,24 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"sourcebronzeweatherdataread": {
-								"dst_prm_container_name": "pricingdatalake",
-								"dst_prm_folder_name": "bronze/WEATHER-DATA/202301/",
-								"dst_prm_file_name": "Agra.json"
+								"dst_prm_container_name": {
+									"value": "@pipeline().parameters.pln_prm_datalake_container_name",
+									"type": "Expression"
+								},
+								"dst_prm_folder_name": {
+									"value": "@concat(pipeline().parameters.pln_prm_datalake_folder_name_bronze,variables('pln_var_weather_month'))",
+									"type": "Expression"
+								}
 							},
 							"sink1": {
-								"dst_prm_container_name": "pricingdatalake",
-								"dst_prm_folder_name": "silver/WEATHER-DATA/202301/",
-								"dst_prm_file_name": "Agra.json"
+								"dst_prm_container_name": {
+									"value": "@pipeline().parameters.pln_prm_datalake_container_name",
+									"type": "Expression"
+								},
+								"dst_prm_folder_name": {
+									"value": "@concat(pipeline().parameters.pln_prm_datalake_folder_name_silver,variables('pln_var_weather_month'))",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -76,11 +86,11 @@
 			},
 			"pln_prm_datalake_folder_name_bronze": {
 				"type": "string",
-				"defaultValue": "bronze/WEATHER-DATA "
+				"defaultValue": "bronze/WEATHER-DATA/"
 			},
 			"pln_prm_datalake_folder_name_silver": {
 				"type": "string",
-				"defaultValue": "silver/WEATHER-DATA "
+				"defaultValue": "silver/WEATHER-DATA/"
 			}
 		},
 		"variables": {
